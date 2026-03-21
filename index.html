@@ -18,7 +18,7 @@
 
   .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
 
-  .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; line-height: 1.6; }
+  .error-box   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; line-height: 1.6; }
   .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; }
 
   .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
@@ -39,13 +39,12 @@
   .chart-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; }
   .chart-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
 
-  /* Control Panel */
   .control-panel { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.25rem; margin-bottom: 1.25rem; }
   .control-panel h2 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 1rem; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
   .control-section { margin-bottom: 1.25rem; }
   .control-section:last-child { margin-bottom: 0; }
   .control-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
   .cmd-btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
   .cmd-btn:hover { opacity: 0.88; }
@@ -58,6 +57,7 @@
   .btn-gray   { background: #475569; color: white; }
   .btn-orange { background: #ea580c; color: white; }
   .btn-purple { background: #7c3aed; color: white; }
+  .btn-dark   { background: #1a1a2e; color: white; }
 
   .threshold-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .threshold-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; width: 120px; color: #1a1a2e; background: #f8fafc; }
@@ -69,9 +69,19 @@
 
   .led-indicator { width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; display: inline-block; margin-right: 6px; vertical-align: middle; transition: background 0.3s; }
   .led-on  { background: #facc15; box-shadow: 0 0 6px #facc15; }
-  .led-off { background: #94a3b8; }
 
-  .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; }
+  /* OTA section */
+  .ota-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+  .ota-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+  .ota-title { font-size: 14px; font-weight: 600; color: #1a1a2e; }
+  .ota-version { font-size: 12px; color: #64748b; font-family: 'Courier New', monospace; background: #e2e8f0; padding: 3px 10px; border-radius: 20px; }
+  .ota-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.6; }
+  .ota-warning { font-size: 12px; color: #854d0e; background: #fef9c3; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: none; }
+  .ota-progress { height: 6px; background: #e2e8f0; border-radius: 10px; margin-top: 10px; display: none; overflow: hidden; }
+  .ota-progress-bar { height: 100%; width: 0%; background: #2563eb; border-radius: 10px; animation: progress 3s ease-in-out infinite; }
+  @keyframes progress { 0%{width:0%} 50%{width:80%} 100%{width:95%} }
+
+  .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
   .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { text-align: left; padding: 8px 10px; color: #64748b; font-weight: 500; border-bottom: 1px solid #e2e8f0; }
@@ -85,9 +95,10 @@
   .log-entry { padding: 2px 0; border-bottom: 1px solid #2d2d4e; }
   .log-entry:last-child { border-bottom: none; }
   .log-time { color: #64748b; margin-right: 8px; }
-  .log-err { color: #fca5a5; }
+  .log-err  { color: #fca5a5; }
+  .log-ota  { color: #93c5fd; }
 
-  .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 1rem; padding-bottom: 1rem; }
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; padding-bottom: 1rem; }
 </style>
 </head>
 <body>
@@ -105,11 +116,10 @@
 </header>
 
 <div class="main">
-
-  <div class="error-box" id="errBox"></div>
+  <div class="error-box"   id="errBox"></div>
   <div class="success-box" id="successBox"></div>
 
-  <!-- Sensor Metrics -->
+  <!-- Metrics -->
   <div class="metrics">
     <div class="mc">
       <div class="mc-label">Temperature</div>
@@ -151,7 +161,6 @@
   <div class="control-panel">
     <h2>ESP32 Control Panel</h2>
 
-    <!-- LED -->
     <div class="control-section">
       <div class="control-label"><span class="led-indicator" id="led-indicator"></span>Built-in LED</div>
       <div class="btn-row">
@@ -160,16 +169,14 @@
       </div>
     </div>
 
-    <!-- Relay -->
     <div class="control-section">
       <div class="control-label">Relay</div>
       <div class="btn-row">
-        <button class="cmd-btn btn-blue"  onclick="sendCommand('RELAY_ON')">Relay ON</button>
-        <button class="cmd-btn btn-gray"  onclick="sendCommand('RELAY_OFF')">Relay OFF</button>
+        <button class="cmd-btn btn-blue" onclick="sendCommand('RELAY_ON')">Relay ON</button>
+        <button class="cmd-btn btn-gray" onclick="sendCommand('RELAY_OFF')">Relay OFF</button>
       </div>
     </div>
 
-    <!-- Threshold -->
     <div class="control-section">
       <div class="control-label">Temperature Alert Threshold</div>
       <div class="threshold-row">
@@ -178,13 +185,34 @@
       </div>
     </div>
 
-    <!-- Custom Message -->
     <div class="control-section">
       <div class="control-label">Send Custom Message</div>
       <div class="message-row">
         <input type="text" class="message-input" id="customMsg" placeholder="Type a message to send to ESP32..." />
         <button class="cmd-btn btn-purple" onclick="sendMessage()">Send</button>
       </div>
+    </div>
+  </div>
+
+  <!-- OTA Update Section -->
+  <div class="ota-section">
+    <div class="ota-header">
+      <div class="ota-title">OTA Firmware Update</div>
+      <span class="ota-version">Current: v1.0.0</span>
+    </div>
+    <div class="ota-desc">
+      Click the button below to send an OTA update command to your ESP32.
+      Make sure you have uploaded the new firmware to S3 and updated the version in Lambda before triggering.
+    </div>
+    <div class="btn-row">
+      <button class="cmd-btn btn-dark" id="otaBtn" onclick="triggerOTA()">Send OTA Update Now</button>
+      <span id="ota-status" style="font-size:12px;color:#64748b"></span>
+    </div>
+    <div class="ota-warning" id="otaWarning">
+      ⚠️ OTA update in progress — do NOT power off the ESP32! It will reboot automatically when done.
+    </div>
+    <div class="ota-progress" id="otaProgress">
+      <div class="ota-progress-bar"></div>
     </div>
   </div>
 
@@ -223,7 +251,6 @@ const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/def
 const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
 
 let tChart, hChart;
-let ledState = false;
 
 const F_TS   = 'ts';
 const F_TEMP = 'temp';
@@ -266,14 +293,13 @@ function parseResponse(raw) {
   return { latest: {}, history: [] };
 }
 
-function addLog(msg, isError) {
+function addLog(msg, type) {
   const log = document.getElementById('logEntries');
   const time = new Date().toLocaleTimeString('en-IN');
   const div = document.createElement('div');
-  div.className = 'log-entry' + (isError ? ' log-err' : '');
+  div.className = 'log-entry' + (type === 'error' ? ' log-err' : type === 'ota' ? ' log-ota' : '');
   div.innerHTML = `<span class="log-time">${time}</span>${msg}`;
   log.insertBefore(div, log.firstChild);
-  // Keep only last 20 entries
   while (log.children.length > 20) log.removeChild(log.lastChild);
 }
 
@@ -287,67 +313,98 @@ function showSuccess(msg) {
 async function sendCommand(command, value) {
   const btns = document.querySelectorAll('.cmd-btn');
   btns.forEach(b => b.disabled = true);
-
   try {
     const body = { command };
     if (value !== undefined) body.value = value;
-
-    const res = await fetch(COMMAND_API, {
+    const res  = await fetch(COMMAND_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
-
     const data = await res.json();
-
     if (res.ok) {
       showSuccess('Command sent: ' + command + (value !== undefined ? ' = ' + value : ''));
       addLog('Sent: ' + command + (value !== undefined ? ' → ' + value : ''));
-
-      // Update LED indicator
-      if (command === 'LED_ON') {
-        ledState = true;
-        document.getElementById('led-indicator').className = 'led-indicator led-on';
-      } else if (command === 'LED_OFF') {
-        ledState = false;
-        document.getElementById('led-indicator').className = 'led-indicator led-off';
-      }
+      if (command === 'LED_ON')  document.getElementById('led-indicator').className = 'led-indicator led-on';
+      if (command === 'LED_OFF') document.getElementById('led-indicator').className = 'led-indicator';
     } else {
       throw new Error(data.error || 'Unknown error');
     }
   } catch(e) {
-    addLog('Error: ' + e.message, true);
-    document.getElementById('errBox').textContent = 'Command failed: ' + e.message;
-    document.getElementById('errBox').style.display = 'block';
-    setTimeout(() => document.getElementById('errBox').style.display = 'none', 4000);
+    addLog('Error: ' + e.message, 'error');
+    const eb = document.getElementById('errBox');
+    eb.textContent = 'Command failed: ' + e.message;
+    eb.style.display = 'block';
+    setTimeout(() => eb.style.display = 'none', 4000);
   }
-
   btns.forEach(b => b.disabled = false);
 }
 
 function sendThreshold() {
   const val = parseFloat(document.getElementById('thresholdVal').value);
-  if (isNaN(val)) {
-    alert('Please enter a valid number for threshold');
-    return;
-  }
+  if (isNaN(val)) { alert('Please enter a valid number'); return; }
   sendCommand('SET_THRESHOLD', val);
 }
 
 function sendMessage() {
   const msg = document.getElementById('customMsg').value.trim();
-  if (!msg) {
-    alert('Please type a message first');
-    return;
-  }
+  if (!msg) { alert('Please type a message first'); return; }
   sendCommand('MESSAGE', msg);
   document.getElementById('customMsg').value = '';
+}
+
+async function triggerOTA() {
+  const confirmed = confirm(
+    'This will send an OTA_UPDATE command to your ESP32.\n\n' +
+    'Make sure you have:\n' +
+    '1. Uploaded new .bin to S3\n' +
+    '2. Updated version in GetFirmwareVersion Lambda\n\n' +
+    'The ESP32 will reboot after flashing. Continue?'
+  );
+  if (!confirmed) return;
+
+  document.getElementById('otaWarning').style.display  = 'block';
+  document.getElementById('otaProgress').style.display = 'block';
+  document.getElementById('ota-status').textContent    = 'Sending OTA command...';
+  document.getElementById('otaBtn').disabled = true;
+
+  addLog('OTA update triggered from dashboard', 'ota');
+
+  try {
+    const res  = await fetch(COMMAND_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: 'OTA_UPDATE' })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      document.getElementById('ota-status').textContent = 'Command sent! ESP32 is downloading firmware...';
+      addLog('OTA command sent successfully — ESP32 will reboot when done', 'ota');
+
+      // Hide progress after 60 seconds
+      setTimeout(() => {
+        document.getElementById('otaWarning').style.display  = 'none';
+        document.getElementById('otaProgress').style.display = 'none';
+        document.getElementById('ota-status').textContent    = 'OTA complete — ESP32 should have rebooted';
+        document.getElementById('otaBtn').disabled = false;
+      }, 60000);
+
+    } else {
+      throw new Error(data.error || 'Failed');
+    }
+  } catch(e) {
+    document.getElementById('otaWarning').style.display  = 'none';
+    document.getElementById('otaProgress').style.display = 'none';
+    document.getElementById('ota-status').textContent    = '';
+    document.getElementById('otaBtn').disabled = false;
+    addLog('OTA error: ' + e.message, 'error');
+  }
 }
 
 function render(data) {
   const latest = data.latest || {};
   const hist   = (data.history || []).slice(0, 30);
-
   const t  = parseFloat(latest[F_TEMP] || 0);
   const h  = parseFloat(latest[F_HUM]  || 0);
   const hi = heatIndex(t, h);
@@ -424,7 +481,7 @@ async function fetchData() {
     const raw  = await res.json();
     render(parseResponse(raw));
   } catch(e) {
-    document.getElementById('footer-msg').textContent = 'Could not fetch sensor data: ' + e.message;
+    document.getElementById('footer-msg').textContent = 'Could not fetch: ' + e.message;
   }
 }
 
