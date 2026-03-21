@@ -19,6 +19,7 @@
   .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
 
   .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; line-height: 1.6; }
+  .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; }
 
   .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
   .mc { background: white; border-radius: 10px; padding: 1.1rem 1.25rem; border: 1px solid #e2e8f0; }
@@ -38,6 +39,38 @@
   .chart-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; }
   .chart-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
 
+  /* Control Panel */
+  .control-panel { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.25rem; margin-bottom: 1.25rem; }
+  .control-panel h2 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 1rem; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+  .control-section { margin-bottom: 1.25rem; }
+  .control-section:last-child { margin-bottom: 0; }
+  .control-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .cmd-btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
+  .cmd-btn:hover { opacity: 0.88; }
+  .cmd-btn:active { transform: scale(0.97); }
+  .cmd-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-green  { background: #16a34a; color: white; }
+  .btn-red    { background: #dc2626; color: white; }
+  .btn-blue   { background: #2563eb; color: white; }
+  .btn-gray   { background: #475569; color: white; }
+  .btn-orange { background: #ea580c; color: white; }
+  .btn-purple { background: #7c3aed; color: white; }
+
+  .threshold-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .threshold-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; width: 120px; color: #1a1a2e; background: #f8fafc; }
+  .threshold-input:focus { outline: none; border-color: #3b82f6; }
+
+  .message-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .message-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; flex: 1; min-width: 200px; color: #1a1a2e; background: #f8fafc; }
+  .message-input:focus { outline: none; border-color: #3b82f6; }
+
+  .led-indicator { width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; display: inline-block; margin-right: 6px; vertical-align: middle; transition: background 0.3s; }
+  .led-on  { background: #facc15; box-shadow: 0 0 6px #facc15; }
+  .led-off { background: #94a3b8; }
+
   .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; }
   .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -46,7 +79,14 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
 
-  .loading { text-align: center; padding: 3rem; color: #94a3b8; font-size: 14px; }
+  .cmd-log { background: #1a1a2e; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+  .cmd-log h3 { font-size: 13px; color: #aab; font-weight: 500; margin-bottom: 10px; }
+  .log-entries { font-family: 'Courier New', monospace; font-size: 12px; color: #86efac; max-height: 120px; overflow-y: auto; }
+  .log-entry { padding: 2px 0; border-bottom: 1px solid #2d2d4e; }
+  .log-entry:last-child { border-bottom: none; }
+  .log-time { color: #64748b; margin-right: 8px; }
+  .log-err { color: #fca5a5; }
+
   .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 1rem; padding-bottom: 1rem; }
 </style>
 </head>
@@ -67,7 +107,9 @@
 <div class="main">
 
   <div class="error-box" id="errBox"></div>
+  <div class="success-box" id="successBox"></div>
 
+  <!-- Sensor Metrics -->
   <div class="metrics">
     <div class="mc">
       <div class="mc-label">Temperature</div>
@@ -93,6 +135,7 @@
     </div>
   </div>
 
+  <!-- Charts -->
   <div class="charts">
     <div class="chart-card">
       <h3>Temperature history (&deg;C)</h3>
@@ -104,6 +147,56 @@
     </div>
   </div>
 
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <h2>ESP32 Control Panel</h2>
+
+    <!-- LED -->
+    <div class="control-section">
+      <div class="control-label"><span class="led-indicator" id="led-indicator"></span>Built-in LED</div>
+      <div class="btn-row">
+        <button class="cmd-btn btn-green" onclick="sendCommand('LED_ON')">Turn ON</button>
+        <button class="cmd-btn btn-red"   onclick="sendCommand('LED_OFF')">Turn OFF</button>
+      </div>
+    </div>
+
+    <!-- Relay -->
+    <div class="control-section">
+      <div class="control-label">Relay</div>
+      <div class="btn-row">
+        <button class="cmd-btn btn-blue"  onclick="sendCommand('RELAY_ON')">Relay ON</button>
+        <button class="cmd-btn btn-gray"  onclick="sendCommand('RELAY_OFF')">Relay OFF</button>
+      </div>
+    </div>
+
+    <!-- Threshold -->
+    <div class="control-section">
+      <div class="control-label">Temperature Alert Threshold</div>
+      <div class="threshold-row">
+        <input type="number" class="threshold-input" id="thresholdVal" placeholder="e.g. 35" min="0" max="100" />
+        <button class="cmd-btn btn-orange" onclick="sendThreshold()">Set Threshold</button>
+      </div>
+    </div>
+
+    <!-- Custom Message -->
+    <div class="control-section">
+      <div class="control-label">Send Custom Message</div>
+      <div class="message-row">
+        <input type="text" class="message-input" id="customMsg" placeholder="Type a message to send to ESP32..." />
+        <button class="cmd-btn btn-purple" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Log -->
+  <div class="cmd-log">
+    <h3>Command log</h3>
+    <div class="log-entries" id="logEntries">
+      <div class="log-entry" style="color:#475569">Waiting for commands...</div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
   <div class="table-card">
     <h3>Recent readings</h3>
     <table>
@@ -117,7 +210,7 @@
         </tr>
       </thead>
       <tbody id="tableBody">
-        <tr><td colspan="5" class="loading">Fetching data from AWS...</td></tr>
+        <tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">Fetching data from AWS...</td></tr>
       </tbody>
     </table>
   </div>
@@ -126,11 +219,13 @@
 </div>
 
 <script>
-const API_URL = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
+const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
+const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
 
 let tChart, hChart;
+let ledState = false;
 
-const F_TS  = 'ts';
+const F_TS   = 'ts';
 const F_TEMP = 'temp';
 const F_HUM  = 'humidity';
 
@@ -141,14 +236,12 @@ function fmtTsShort(ms) {
   try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
   catch { return ms; }
 }
-
 function heatIndex(t, h) {
   const hi = -8.78469475556 + 1.61139411*t + 2.33854883889*h
     - 0.14611605*t*h - 0.012308094*t*t - 0.0164248277778*h*h
     + 0.002211732*t*t*h + 0.00072546*t*h*h - 0.000003582*t*t*h*h;
   return isNaN(hi) ? '--' : hi.toFixed(1);
 }
-
 function tempStatus(t) {
   if (t >= 40) return ['Danger', 'hot'];
   if (t >= 35) return ['Hot', 'hot'];
@@ -160,7 +253,6 @@ function humStatus(h) {
   if (h < 30) return ['Dry', 'dry'];
   return ['Comfortable', 'ok'];
 }
-
 function parseResponse(raw) {
   if (Array.isArray(raw)) {
     const sorted = [...raw].sort((a, b) => b[F_TS] - a[F_TS]);
@@ -172,6 +264,84 @@ function parseResponse(raw) {
     return parseResponse(parsed);
   }
   return { latest: {}, history: [] };
+}
+
+function addLog(msg, isError) {
+  const log = document.getElementById('logEntries');
+  const time = new Date().toLocaleTimeString('en-IN');
+  const div = document.createElement('div');
+  div.className = 'log-entry' + (isError ? ' log-err' : '');
+  div.innerHTML = `<span class="log-time">${time}</span>${msg}`;
+  log.insertBefore(div, log.firstChild);
+  // Keep only last 20 entries
+  while (log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+function showSuccess(msg) {
+  const el = document.getElementById('successBox');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+
+async function sendCommand(command, value) {
+  const btns = document.querySelectorAll('.cmd-btn');
+  btns.forEach(b => b.disabled = true);
+
+  try {
+    const body = { command };
+    if (value !== undefined) body.value = value;
+
+    const res = await fetch(COMMAND_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showSuccess('Command sent: ' + command + (value !== undefined ? ' = ' + value : ''));
+      addLog('Sent: ' + command + (value !== undefined ? ' → ' + value : ''));
+
+      // Update LED indicator
+      if (command === 'LED_ON') {
+        ledState = true;
+        document.getElementById('led-indicator').className = 'led-indicator led-on';
+      } else if (command === 'LED_OFF') {
+        ledState = false;
+        document.getElementById('led-indicator').className = 'led-indicator led-off';
+      }
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch(e) {
+    addLog('Error: ' + e.message, true);
+    document.getElementById('errBox').textContent = 'Command failed: ' + e.message;
+    document.getElementById('errBox').style.display = 'block';
+    setTimeout(() => document.getElementById('errBox').style.display = 'none', 4000);
+  }
+
+  btns.forEach(b => b.disabled = false);
+}
+
+function sendThreshold() {
+  const val = parseFloat(document.getElementById('thresholdVal').value);
+  if (isNaN(val)) {
+    alert('Please enter a valid number for threshold');
+    return;
+  }
+  sendCommand('SET_THRESHOLD', val);
+}
+
+function sendMessage() {
+  const msg = document.getElementById('customMsg').value.trim();
+  if (!msg) {
+    alert('Please type a message first');
+    return;
+  }
+  sendCommand('MESSAGE', msg);
+  document.getElementById('customMsg').value = '';
 }
 
 function render(data) {
@@ -244,22 +414,17 @@ function render(data) {
   }).join('');
 
   document.getElementById('footer-msg').textContent =
-    'Live data from AWS Lambda — auto-refreshing every 15 seconds';
+    'Live data from AWS — auto-refreshing every 15 seconds';
 }
 
 async function fetchData() {
-  const errBox = document.getElementById('errBox');
-  errBox.style.display = 'none';
   try {
-    const res = await fetch(API_URL);
+    const res  = await fetch(DATA_API);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const raw  = await res.json();
-    const data = parseResponse(raw);
-    render(data);
+    render(parseResponse(raw));
   } catch(e) {
-    errBox.innerHTML = '<strong>Error:</strong> ' + e.message;
-    errBox.style.display = 'block';
-    document.getElementById('footer-msg').textContent = 'Could not connect to AWS';
+    document.getElementById('footer-msg').textContent = 'Could not fetch sensor data: ' + e.message;
   }
 }
 
