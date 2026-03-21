@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 Sensor Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; min-height: 100vh; }
+
+  header { background: #1a1a2e; color: white; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .header-left h1 { font-size: 20px; font-weight: 600; }
+  .header-left p { font-size: 12px; color: #aab; margin-top: 2px; }
+  .live-pill { background: #14532d; color: #86efac; font-size: 12px; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+  .api-bar { background: white; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; border: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .api-bar label { font-size: 13px; color: #64748b; white-space: nowrap; font-weight: 500; }
+  .api-bar input { flex: 1; min-width: 200px; font-size: 12px; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Courier New', monospace; background: #f8fafc; color: #1a1a2e; }
+  .api-bar input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .connect-btn { background: #1a1a2e; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .connect-btn:hover { background: #2d2d4e; }
+
+  .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; line-height: 1.6; }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
+  .mc { background: white; border-radius: 10px; padding: 1.1rem 1.25rem; border: 1px solid #e2e8f0; }
+  .mc-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+  .mc-val { font-size: 30px; font-weight: 600; color: #1a1a2e; line-height: 1; }
+  .mc-unit { font-size: 15px; font-weight: 400; color: #94a3b8; }
+  .mc-sub { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 12px; margin-top: 6px; font-weight: 500; }
+  .hot   { background: #fee2e2; color: #991b1b; }
+  .warm  { background: #fef9c3; color: #854d0e; }
+  .ok    { background: #dcfce7; color: #166534; }
+  .humid { background: #dbeafe; color: #1e40af; }
+  .dry   { background: #fef9c3; color: #854d0e; }
+
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  @media(max-width:600px) { .charts { grid-template-columns: 1fr; } }
+  .chart-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; }
+  .chart-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
+
+  .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; }
+  .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 10px; color: #64748b; font-weight: 500; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #1a1a2e; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 1rem; padding-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>ESP32 Sensor Dashboard</h1>
+    <p>Device: esp32_test &nbsp;&mdash;&nbsp; AWS IoT Core &rarr; DynamoDB &rarr; Lambda</p>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="last-updated" style="font-size:11px;color:#aab"></span>
+    <span class="live-pill"><span class="live-dot"></span>Live</span>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="api-bar">
+    <label>API Gateway URL:</label>
+    <input type="text" id="apiUrl" placeholder="https://xxxxxxxx.execute-api.ap-south-1.amazonaws.com/default/yourFunction" />
+    <button class="connect-btn" onclick="fetchData()">Connect &amp; Load</button>
+  </div>
+
+  <div class="error-box" id="errBox"></div>
+
+  <div class="metrics">
+    <div class="mc">
+      <div class="mc-label">Temperature</div>
+      <div class="mc-val" id="val-temp">--<span class="mc-unit"> &deg;C</span></div>
+      <div id="badge-temp"></div>
+      <div class="mc-sub" id="time-temp">waiting...</div>
+    </div>
+    <div class="mc">
+      <div class="mc-label">Humidity</div>
+      <div class="mc-val" id="val-hum">--<span class="mc-unit"> %</span></div>
+      <div id="badge-hum"></div>
+      <div class="mc-sub" id="time-hum">waiting...</div>
+    </div>
+    <div class="mc">
+      <div class="mc-label">Heat Index</div>
+      <div class="mc-val" id="val-hi">--<span class="mc-unit"> &deg;C</span></div>
+      <div class="mc-sub">feels like</div>
+    </div>
+    <div class="mc">
+      <div class="mc-label">Total readings</div>
+      <div class="mc-val" id="val-count">--</div>
+      <div class="mc-sub" id="last-reading">last reading: --</div>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="chart-card">
+      <h3>Temperature history (&deg;C)</h3>
+      <div style="position:relative;height:200px"><canvas id="tempChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Humidity history (%)</h3>
+      <div style="position:relative;height:200px"><canvas id="humChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3>Recent readings</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Temperature (&deg;C)</th>
+          <th>Humidity (%)</th>
+          <th>Heat Index (&deg;C)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">Paste your API Gateway URL above and click Connect &amp; Load</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer" id="footer-msg">Auto-refreshes every 15 seconds</div>
+</div>
+
+<script>
+let tChart, hChart;
+
+// Your DynamoDB field names
+const F_TS   = 'ts';          // Unix timestamp in milliseconds
+const F_TEMP = 'temp';        // temperature
+const F_HUM  = 'humidity';    // humidity
+
+function fmtTs(ms) {
+  try { return new Date(ms).toLocaleString('en-IN'); } catch { return ms; }
+}
+function fmtTsShort(ms) {
+  try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
+  catch { return ms; }
+}
+
+function heatIndex(t, h) {
+  const hi = -8.78469475556 + 1.61139411*t + 2.33854883889*h
+    - 0.14611605*t*h - 0.012308094*t*t - 0.0164248277778*h*h
+    + 0.002211732*t*t*h + 0.00072546*t*h*h - 0.000003582*t*t*h*h;
+  return isNaN(hi) ? '--' : hi.toFixed(1);
+}
+
+function tempStatus(t) {
+  if (t >= 40) return ['Danger', 'hot'];
+  if (t >= 35) return ['Hot', 'hot'];
+  if (t >= 28) return ['Warm', 'warm'];
+  return ['Normal', 'ok'];
+}
+function humStatus(h) {
+  if (h > 70) return ['High humidity', 'humid'];
+  if (h < 30) return ['Dry', 'dry'];
+  return ['Comfortable', 'ok'];
+}
+
+function parseResponse(raw) {
+  // Handle all possible Lambda response formats
+  // Format 1: raw array directly  →  [{ts, temp, humidity}, ...]
+  if (Array.isArray(raw)) {
+    const sorted = [...raw].sort((a, b) => b[F_TS] - a[F_TS]);
+    return { latest: sorted[0], history: sorted };
+  }
+  // Format 2: {latest: {}, history: [...]}
+  if (raw.latest && raw.history) return raw;
+  // Format 3: Lambda wraps in body string  →  {statusCode, body: "..."}
+  if (raw.body) {
+    const parsed = typeof raw.body === 'string' ? JSON.parse(raw.body) : raw.body;
+    return parseResponse(parsed);
+  }
+  return { latest: {}, history: [] };
+}
+
+function render(data) {
+  const latest = data.latest || {};
+  const hist   = (data.history || []).slice(0, 30);
+
+  const t  = parseFloat(latest[F_TEMP] || 0);
+  const h  = parseFloat(latest[F_HUM]  || 0);
+  const hi = heatIndex(t, h);
+  const ts = latest[F_TS];
+
+  document.getElementById('val-temp').innerHTML  = t.toFixed(1) + '<span class="mc-unit"> &deg;C</span>';
+  document.getElementById('val-hum').innerHTML   = h.toFixed(1) + '<span class="mc-unit"> %</span>';
+  document.getElementById('val-hi').innerHTML    = hi + '<span class="mc-unit"> &deg;C</span>';
+  document.getElementById('val-count').textContent = hist.length;
+
+  const [tLabel, tClass] = tempStatus(t);
+  document.getElementById('badge-temp').innerHTML = `<span class="badge ${tClass}">${tLabel}</span>`;
+  const [hLabel, hClass] = humStatus(h);
+  document.getElementById('badge-hum').innerHTML  = `<span class="badge ${hClass}">${hLabel}</span>`;
+
+  document.getElementById('time-temp').textContent    = ts ? 'at ' + fmtTsShort(ts) : '--';
+  document.getElementById('time-hum').textContent     = ts ? 'at ' + fmtTsShort(ts) : '--';
+  document.getElementById('last-reading').textContent = ts ? 'last: ' + fmtTsShort(ts) : '--';
+  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
+
+  // Charts — oldest first
+  const rev    = [...hist].reverse();
+  const labels = rev.map(r => fmtTsShort(r[F_TS]));
+  const temps  = rev.map(r => parseFloat(r[F_TEMP]).toFixed(1));
+  const hums   = rev.map(r => parseFloat(r[F_HUM]).toFixed(1));
+
+  const opts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font:{size:10}, maxRotation:45, autoSkip:true, maxTicksLimit:8 }, grid:{display:false} },
+      y: { ticks: { font:{size:10} }, grid:{ color:'rgba(0,0,0,0.05)' } }
+    },
+    elements: { point:{ radius:2 } }
+  };
+
+  if (tChart) tChart.destroy();
+  tChart = new Chart(document.getElementById('tempChart'), {
+    type: 'line',
+    data: { labels, datasets:[{ data:temps, borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,0.07)', tension:0.4, fill:true, borderWidth:2 }] },
+    options: opts
+  });
+
+  if (hChart) hChart.destroy();
+  hChart = new Chart(document.getElementById('humChart'), {
+    type: 'line',
+    data: { labels, datasets:[{ data:hums, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.07)', tension:0.4, fill:true, borderWidth:2 }] },
+    options: opts
+  });
+
+  // Table
+  const tbody = document.getElementById('tableBody');
+  const colorMap = {hot:'#dc2626', warm:'#d97706', ok:'#16a34a'};
+  tbody.innerHTML = hist.map(r => {
+    const rt = parseFloat(r[F_TEMP]);
+    const rh = parseFloat(r[F_HUM]);
+    const rhi = heatIndex(rt, rh);
+    const [tlabel, tc] = tempStatus(rt);
+    return `<tr>
+      <td style="font-family:'Courier New',monospace;font-size:11px">${fmtTs(r[F_TS])}</td>
+      <td style="color:${colorMap[tc]};font-weight:600">${rt.toFixed(1)}</td>
+      <td>${rh.toFixed(1)}</td>
+      <td>${rhi}</td>
+      <td><span class="badge ${tc}">${tlabel}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+async function fetchData() {
+  const url    = document.getElementById('apiUrl').value.trim();
+  const errBox = document.getElementById('errBox');
+  errBox.style.display = 'none';
+
+  if (!url) {
+    document.getElementById('footer-msg').textContent = 'Paste your API Gateway URL above and click Connect & Load';
+    return;
+  }
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const raw  = await res.json();
+    const data = parseResponse(raw);
+    render(data);
+    document.getElementById('footer-msg').textContent =
+      'Connected to AWS Lambda — auto-refreshing every 15 seconds';
+  } catch(e) {
+    errBox.innerHTML = '<strong>Error:</strong> ' + e.message + '<br><br>'
+      + '<strong>Common fixes:</strong><br>'
+      + '1. Add <code>Access-Control-Allow-Origin: *</code> to your Lambda return headers<br>'
+      + '2. Make sure API Gateway trigger is added to your Lambda<br>'
+      + '3. Double-check the URL is correct';
+    errBox.style.display = 'block';
+    document.getElementById('footer-msg').textContent = 'Could not connect — see error above';
+  }
+}
+
+// Auto-refresh every 15 seconds
+setInterval(() => {
+  const url = document.getElementById('apiUrl').value.trim();
+  if (url) fetchData();
+}, 15000);
+</script>
+</body>
+</html>
