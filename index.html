@@ -56,7 +56,6 @@
   .cmd-btn:hover { opacity: 0.88; }
   .cmd-btn:active { transform: scale(0.97); }
   .cmd-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .btn-green  { background: #16a34a; color: white; }
   .btn-red    { background: #dc2626; color: white; }
   .btn-blue   { background: #2563eb; color: white; }
@@ -83,6 +82,29 @@
   .ota-progress-bar { height: 100%; width: 0%; background: #2563eb; border-radius: 10px; animation: prog 3s ease-in-out infinite; }
   @keyframes prog { 0%{width:0%} 50%{width:80%} 100%{width:95%} }
 
+  /* AI Chat */
+  .ai-chat { background: white; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1.25rem; overflow: hidden; }
+  .ai-chat-header { background: #1a1a2e; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; }
+  .ai-chat-header h2 { font-size: 15px; font-weight: 600; color: white; }
+  .ai-badge { background: #7c3aed; color: white; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .ai-desc { font-size: 11px; color: #aab; margin-left: auto; }
+  .chat-messages { height: 320px; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
+  .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+  .chat-msg.user { background: #1a1a2e; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chat-msg.ai { background: #f1f5f9; color: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .chat-msg.ai.thinking { color: #94a3b8; font-style: italic; }
+  .chat-msg.system { background: #f0fdf4; color: #166534; align-self: center; font-size: 11px; border-radius: 20px; padding: 4px 12px; }
+  .chat-msg.command { background: #ede9fe; color: #5b21b6; align-self: center; font-size: 11px; border-radius: 20px; padding: 4px 12px; }
+  .chat-input-row { display: flex; gap: 8px; padding: 1rem; border-top: 1px solid #e2e8f0; }
+  .chat-input { flex: 1; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #1a1a2e; background: #f8fafc; font-family: inherit; }
+  .chat-input:focus { outline: none; border-color: #7c3aed; }
+  .chat-send { background: #7c3aed; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+  .chat-send:hover { background: #6d28d9; }
+  .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+  .suggestions { display: flex; gap: 6px; padding: 0 1rem 0.75rem; flex-wrap: wrap; }
+  .suggestion { background: #f1f5f9; color: #475569; border: none; padding: 5px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; transition: background 0.15s; }
+  .suggestion:hover { background: #e2e8f0; }
+
   .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
   .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -99,11 +121,7 @@
   .log-time { color: #64748b; margin-right: 8px; }
   .log-err { color: #fca5a5; }
   .log-ota { color: #93c5fd; }
-
-  .install-banner { background: #1a1a2e; color: white; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: none; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-  .install-banner p { font-size: 13px; color: #aab; }
-  .install-banner strong { color: white; display: block; font-size: 14px; margin-bottom: 4px; }
-  .install-btn { background: #22c55e; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .log-ai  { color: #c4b5fd; }
 
   .footer { text-align: center; font-size: 11px; color: #94a3b8; padding-bottom: 1rem; }
 </style>
@@ -123,16 +141,6 @@
 </header>
 
 <div class="main">
-
-  <!-- Install Banner (shows when PWA installable) -->
-  <div class="install-banner" id="installBanner">
-    <div>
-      <strong>Install as App</strong>
-      <p>Add this dashboard to your home screen for quick access</p>
-    </div>
-    <button class="install-btn" onclick="installPWA()">Install App</button>
-  </div>
-
   <div class="error-box"   id="errBox"></div>
   <div class="success-box" id="successBox"></div>
 
@@ -171,6 +179,30 @@
     <div class="chart-card">
       <h3>Humidity history (%)</h3>
       <div style="position:relative;height:200px"><canvas id="humChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- AI Chat -->
+  <div class="ai-chat">
+    <div class="ai-chat-header">
+      <h2>AI Assistant</h2>
+      <span class="ai-badge">Claude AI</span>
+      <span class="ai-desc">Ask anything about your ESP32 data or give commands</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg ai">Hi! I'm your ESP32 AI assistant. I have access to your live sensor data and can control your device. Try asking me something or give me a command!</div>
+    </div>
+    <div class="suggestions">
+      <button class="suggestion" onclick="quickAsk('What is the current temperature and humidity?')">Current readings</button>
+      <button class="suggestion" onclick="quickAsk('Is anything abnormal in the recent data?')">Check for anomalies</button>
+      <button class="suggestion" onclick="quickAsk('What was the highest temperature today?')">Highest temp today</button>
+      <button class="suggestion" onclick="quickAsk('Turn on the LED')">Turn on LED</button>
+      <button class="suggestion" onclick="quickAsk('Turn off the LED')">Turn off LED</button>
+      <button class="suggestion" onclick="quickAsk('Give me a summary of the last hour')">Last hour summary</button>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about your data or give a command... e.g. 'turn on LED' or 'is temp normal?'" />
+      <button class="chat-send" id="chatSend" onclick="sendChat()">Send</button>
     </div>
   </div>
 
@@ -213,19 +245,13 @@
       <div class="ota-title">OTA Firmware Update</div>
       <span class="ota-version">Current: v1.0.0</span>
     </div>
-    <div class="ota-desc">
-      Triggers a hybrid OTA — ESP32 switches to WiFi, downloads new firmware from S3, flashes and reboots back to Ethernet automatically.
-    </div>
+    <div class="ota-desc">Triggers hybrid OTA — ESP32 switches to WiFi, downloads firmware from S3, flashes and reboots back to Ethernet.</div>
     <div class="btn-row">
       <button class="cmd-btn btn-dark" id="otaBtn" onclick="triggerOTA()">Send OTA Update Now</button>
       <span id="ota-status" style="font-size:12px;color:#64748b"></span>
     </div>
-    <div class="ota-warning" id="otaWarning">
-      ⚠️ OTA in progress — ESP32 switched to WiFi and is flashing. Do NOT power off! It will reboot automatically.
-    </div>
-    <div class="ota-progress" id="otaProgress">
-      <div class="ota-progress-bar"></div>
-    </div>
+    <div class="ota-warning" id="otaWarning">⚠️ OTA in progress — ESP32 switched to WiFi and is flashing. Do NOT power off!</div>
+    <div class="ota-progress" id="otaProgress"><div class="ota-progress-bar"></div></div>
   </div>
 
   <!-- Command Log -->
@@ -241,13 +267,7 @@
     <h3>Recent readings</h3>
     <table>
       <thead>
-        <tr>
-          <th>Timestamp</th>
-          <th>Temperature (&deg;C)</th>
-          <th>Humidity (%)</th>
-          <th>Heat Index (&deg;C)</th>
-          <th>Status</th>
-        </tr>
+        <tr><th>Timestamp</th><th>Temperature (&deg;C)</th><th>Humidity (%)</th><th>Heat Index (&deg;C)</th><th>Status</th></tr>
       </thead>
       <tbody id="tableBody">
         <tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">Fetching data from AWS...</td></tr>
@@ -261,48 +281,22 @@
 <script>
 const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
 const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
+const CLAUDE_API  = "https://api.anthropic.com/v1/messages";
+const CLAUDE_KEY  = "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";
 
-let tChart, hChart, deferredPrompt;
+let tChart, hChart;
+let sensorHistory = [];
+let latestReading = {};
+let ledState = false;
 
 const F_TS   = 'ts';
 const F_TEMP = 'temp';
 const F_HUM  = 'humidity';
 
-// PWA install prompt
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBanner').style.display = 'flex';
-});
-
-window.addEventListener('appinstalled', () => {
-  document.getElementById('installBanner').style.display = 'none';
-  deferredPrompt = null;
-});
-
-function installPWA() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(result => {
-      if (result.outcome === 'accepted') {
-        document.getElementById('installBanner').style.display = 'none';
-      }
-      deferredPrompt = null;
-    });
-  }
-}
-
-function fmtTs(ms) {
-  try { return new Date(ms).toLocaleString('en-IN'); } catch { return ms; }
-}
-function fmtTsShort(ms) {
-  try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
-  catch { return ms; }
-}
+function fmtTs(ms) { try { return new Date(ms).toLocaleString('en-IN'); } catch { return ms; } }
+function fmtTsShort(ms) { try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); } catch { return ms; } }
 function heatIndex(t, h) {
-  const hi = -8.78469475556 + 1.61139411*t + 2.33854883889*h
-    - 0.14611605*t*h - 0.012308094*t*t - 0.0164248277778*h*h
-    + 0.002211732*t*t*h + 0.00072546*t*h*h - 0.000003582*t*t*h*h;
+  const hi = -8.78469475556 + 1.61139411*t + 2.33854883889*h - 0.14611605*t*h - 0.012308094*t*t - 0.0164248277778*h*h + 0.002211732*t*t*h + 0.00072546*t*h*h - 0.000003582*t*t*h*h;
   return isNaN(hi) ? '--' : hi.toFixed(1);
 }
 function tempStatus(t) {
@@ -317,23 +311,17 @@ function humStatus(h) {
   return ['Comfortable', 'ok'];
 }
 function parseResponse(raw) {
-  if (Array.isArray(raw)) {
-    const sorted = [...raw].sort((a, b) => b[F_TS] - a[F_TS]);
-    return { latest: sorted[0], history: sorted };
-  }
+  if (Array.isArray(raw)) { const s = [...raw].sort((a,b) => b[F_TS]-a[F_TS]); return {latest:s[0], history:s}; }
   if (raw.latest && raw.history) return raw;
-  if (raw.body) {
-    const parsed = typeof raw.body === 'string' ? JSON.parse(raw.body) : raw.body;
-    return parseResponse(parsed);
-  }
-  return { latest: {}, history: [] };
+  if (raw.body) { const p = typeof raw.body==='string' ? JSON.parse(raw.body) : raw.body; return parseResponse(p); }
+  return {latest:{}, history:[]};
 }
 
 function addLog(msg, type) {
   const log = document.getElementById('logEntries');
   const time = new Date().toLocaleTimeString('en-IN');
   const div = document.createElement('div');
-  div.className = 'log-entry' + (type === 'error' ? ' log-err' : type === 'ota' ? ' log-ota' : '');
+  div.className = 'log-entry' + (type==='error'?' log-err':type==='ota'?' log-ota':type==='ai'?' log-ai':'');
   div.innerHTML = `<span class="log-time">${time}</span>${msg}`;
   log.insertBefore(div, log.firstChild);
   while (log.children.length > 20) log.removeChild(log.lastChild);
@@ -346,6 +334,129 @@ function showSuccess(msg) {
   setTimeout(() => el.style.display = 'none', 3000);
 }
 
+// ── AI Chat ──────────────────────────────────────────────────
+function addChatMsg(text, role) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function quickAsk(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg   = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  document.getElementById('chatSend').disabled = true;
+
+  addChatMsg(msg, 'user');
+  const thinking = addChatMsg('Thinking...', 'ai thinking');
+
+  // Build context from sensor data
+  const recentData = sensorHistory.slice(0, 20).map(r => ({
+    time: fmtTs(r[F_TS]),
+    temp: parseFloat(r[F_TEMP]).toFixed(1),
+    humidity: parseFloat(r[F_HUM]).toFixed(1)
+  }));
+
+  const latest = latestReading;
+  const systemPrompt = `You are an AI assistant embedded in an ESP32 IoT dashboard. You have full access to the device's sensor data and can control it.
+
+CURRENT SENSOR STATE:
+- Temperature: ${parseFloat(latest[F_TEMP]||0).toFixed(1)}°C
+- Humidity: ${parseFloat(latest[F_HUM]||0).toFixed(1)}%
+- Heat Index: ${heatIndex(parseFloat(latest[F_TEMP]||0), parseFloat(latest[F_HUM]||0))}°C
+- Last reading: ${latest[F_TS] ? fmtTs(latest[F_TS]) : 'unknown'}
+- LED state: ${ledState ? 'ON' : 'OFF'}
+- Device: esp32_test
+
+RECENT HISTORY (last 20 readings):
+${JSON.stringify(recentData, null, 2)}
+
+AVAILABLE COMMANDS you can execute:
+- LED_ON / LED_OFF — control built-in LED
+- RELAY_ON / RELAY_OFF — control relay
+- SET_THRESHOLD <number> — set temperature alert threshold
+- MESSAGE <text> — send custom message to device
+
+INSTRUCTIONS:
+- Answer questions about the sensor data accurately using the data provided
+- If the user asks to control something, respond conversationally AND include a JSON block at the end of your response in this exact format:
+  EXECUTE_COMMAND: {"command": "LED_ON"}
+  or for threshold: EXECUTE_COMMAND: {"command": "SET_THRESHOLD", "value": 35}
+- Detect anomalies by looking at patterns in the history
+- Be concise and helpful
+- If asked about trends, analyze the history data
+- Temperature above 35°C is hot, above 40°C is dangerous
+- Humidity above 70% is high, below 30% is dry
+- Always be friendly and explain what you're doing`;
+
+  try {
+    const res = await fetch(CLAUDE_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: msg }]
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Sorry, I could not process that.';
+
+    // Check if AI wants to execute a command
+    const cmdMatch = reply.match(/EXECUTE_COMMAND:\s*(\{[^}]+\})/);
+    let displayReply = reply.replace(/EXECUTE_COMMAND:\s*\{[^}]+\}/g, '').trim();
+
+    thinking.className = 'chat-msg ai';
+    thinking.textContent = displayReply;
+
+    if (cmdMatch) {
+      try {
+        const cmdObj = JSON.parse(cmdMatch[1]);
+        const cmdDiv = addChatMsg(`Executing: ${cmdObj.command}${cmdObj.value !== undefined ? ' → ' + cmdObj.value : ''}`, 'command');
+        addLog('AI executed: ' + cmdObj.command, 'ai');
+        await sendCommand(cmdObj.command, cmdObj.value);
+      } catch(e) {
+        console.log('Command parse error', e);
+      }
+    }
+
+    addLog('AI responded to: ' + msg.substring(0, 30) + '...', 'ai');
+
+  } catch(e) {
+    thinking.className = 'chat-msg ai';
+    thinking.textContent = 'Error connecting to AI: ' + e.message;
+    addLog('AI error: ' + e.message, 'error');
+  }
+
+  document.getElementById('chatSend').disabled = false;
+}
+
+// Enter key to send
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('chatInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendChat();
+  });
+});
+
+// ── Commands ─────────────────────────────────────────────────
 async function sendCommand(command, value) {
   const btns = document.querySelectorAll('.cmd-btn');
   btns.forEach(b => b.disabled = true);
@@ -361,11 +472,9 @@ async function sendCommand(command, value) {
     if (res.ok) {
       showSuccess('Command sent: ' + command + (value !== undefined ? ' = ' + value : ''));
       addLog('Sent: ' + command + (value !== undefined ? ' → ' + value : ''));
-      if (command === 'LED_ON')  document.getElementById('led-indicator').className = 'led-indicator led-on';
-      if (command === 'LED_OFF') document.getElementById('led-indicator').className = 'led-indicator';
-    } else {
-      throw new Error(data.error || 'Unknown error');
-    }
+      if (command === 'LED_ON')  { ledState = true;  document.getElementById('led-indicator').className = 'led-indicator led-on'; }
+      if (command === 'LED_OFF') { ledState = false; document.getElementById('led-indicator').className = 'led-indicator'; }
+    } else { throw new Error(data.error || 'Unknown error'); }
   } catch(e) {
     addLog('Error: ' + e.message, 'error');
     const eb = document.getElementById('errBox');
@@ -390,27 +499,15 @@ function sendMessage() {
 }
 
 async function triggerOTA() {
-  const confirmed = confirm(
-    'This will send OTA_UPDATE to your ESP32.\n\n' +
-    'Make sure:\n' +
-    '1. New .bin uploaded to S3\n' +
-    '2. version.json updated in S3\n\n' +
-    'ESP32 will switch to WiFi, flash, then reboot. Continue?'
-  );
+  const confirmed = confirm('Send OTA_UPDATE to ESP32?\n\nMake sure new .bin is uploaded to S3 and version.json is updated.\n\nESP32 will switch to WiFi, flash, then reboot.');
   if (!confirmed) return;
-
   document.getElementById('otaWarning').style.display  = 'block';
   document.getElementById('otaProgress').style.display = 'block';
   document.getElementById('ota-status').textContent    = 'Sending OTA command...';
   document.getElementById('otaBtn').disabled = true;
-  addLog('OTA update triggered', 'ota');
-
+  addLog('OTA triggered', 'ota');
   try {
-    const res  = await fetch(COMMAND_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: 'OTA_UPDATE' })
-    });
+    const res = await fetch(COMMAND_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({command:'OTA_UPDATE'}) });
     const data = await res.json();
     if (res.ok) {
       document.getElementById('ota-status').textContent = 'Command sent! ESP32 switching to WiFi...';
@@ -421,9 +518,7 @@ async function triggerOTA() {
         document.getElementById('ota-status').textContent    = 'OTA complete — ESP32 rebooted';
         document.getElementById('otaBtn').disabled = false;
       }, 90000);
-    } else {
-      throw new Error(data.error || 'Failed');
-    }
+    } else { throw new Error(data.error || 'Failed'); }
   } catch(e) {
     document.getElementById('otaWarning').style.display  = 'none';
     document.getElementById('otaProgress').style.display = 'none';
@@ -433,13 +528,15 @@ async function triggerOTA() {
   }
 }
 
+// ── Render ────────────────────────────────────────────────────
 function render(data) {
-  const latest = data.latest || {};
-  const hist   = (data.history || []).slice(0, 30);
-  const t  = parseFloat(latest[F_TEMP] || 0);
-  const h  = parseFloat(latest[F_HUM]  || 0);
+  latestReading = data.latest || {};
+  sensorHistory = data.history || [];
+  const hist = sensorHistory.slice(0, 30);
+  const t  = parseFloat(latestReading[F_TEMP] || 0);
+  const h  = parseFloat(latestReading[F_HUM]  || 0);
   const hi = heatIndex(t, h);
-  const ts = latest[F_TS];
+  const ts = latestReading[F_TS];
 
   document.getElementById('val-temp').innerHTML  = t.toFixed(1) + '<span class="mc-unit"> &deg;C</span>';
   document.getElementById('val-hum').innerHTML   = h.toFixed(1) + '<span class="mc-unit"> %</span>';
@@ -450,7 +547,6 @@ function render(data) {
   document.getElementById('badge-temp').innerHTML = `<span class="badge ${tClass}">${tLabel}</span>`;
   const [hLabel, hClass] = humStatus(h);
   document.getElementById('badge-hum').innerHTML  = `<span class="badge ${hClass}">${hLabel}</span>`;
-
   document.getElementById('time-temp').textContent    = ts ? 'at ' + fmtTsShort(ts) : '--';
   document.getElementById('time-hum').textContent     = ts ? 'at ' + fmtTsShort(ts) : '--';
   document.getElementById('last-reading').textContent = ts ? 'last: ' + fmtTsShort(ts) : '--';
@@ -488,8 +584,7 @@ function render(data) {
   const tbody = document.getElementById('tableBody');
   const colorMap = {hot:'#dc2626', warm:'#d97706', ok:'#16a34a'};
   tbody.innerHTML = hist.map(r => {
-    const rt = parseFloat(r[F_TEMP]);
-    const rh = parseFloat(r[F_HUM]);
+    const rt = parseFloat(r[F_TEMP]), rh = parseFloat(r[F_HUM]);
     const rhi = heatIndex(rt, rh);
     const [tlabel, tc] = tempStatus(rt);
     return `<tr>
@@ -501,22 +596,20 @@ function render(data) {
     </tr>`;
   }).join('');
 
-  document.getElementById('footer-msg').textContent =
-    'Live data from AWS — auto-refreshing every 15 seconds';
+  document.getElementById('footer-msg').textContent = 'Live data from AWS — auto-refreshing every 15 seconds';
 }
 
 async function fetchData() {
   try {
-    const res  = await fetch(DATA_API);
+    const res = await fetch(DATA_API);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const raw  = await res.json();
+    const raw = await res.json();
     render(parseResponse(raw));
   } catch(e) {
     document.getElementById('footer-msg').textContent = 'Could not fetch: ' + e.message;
   }
 }
 
-// Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(() => console.log('SW registered'))
