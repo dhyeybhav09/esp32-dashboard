@@ -281,7 +281,7 @@
 <script>
 const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
 const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
-const CLAUDE_API  = "https://api.anthropic.com/v1/messages";
+const CLAUDE_API  = "https://7u0hl30szb.execute-api.eu-north-1.amazonaws.com/default/ClaudeProxy";
 const CLAUDE_KEY  = "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";
 
 let tChart, hChart;
@@ -418,7 +418,8 @@ INSTRUCTIONS:
     });
 
     const data = await res.json();
-    const reply = data.content?.[0]?.text || 'Sorry, I could not process that.';
+    const parsed = data.body ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : data;
+    const reply = parsed.content?.[0]?.text || 'Sorry, I could not process that.';
 
     // Check if AI wants to execute a command
     const cmdMatch = reply.match(/EXECUTE_COMMAND:\s*(\{[^}]+\})/);
