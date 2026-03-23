@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ESP32">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon.png">
 <title>ESP32 Sensor Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -59,27 +65,23 @@
   .btn-purple { background: #7c3aed; color: white; }
   .btn-dark   { background: #1a1a2e; color: white; }
 
-  .threshold-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .threshold-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; width: 120px; color: #1a1a2e; background: #f8fafc; }
   .threshold-input:focus { outline: none; border-color: #3b82f6; }
-
-  .message-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .message-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; flex: 1; min-width: 200px; color: #1a1a2e; background: #f8fafc; }
   .message-input:focus { outline: none; border-color: #3b82f6; }
 
   .led-indicator { width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; display: inline-block; margin-right: 6px; vertical-align: middle; transition: background 0.3s; }
-  .led-on  { background: #facc15; box-shadow: 0 0 6px #facc15; }
+  .led-on { background: #facc15; box-shadow: 0 0 6px #facc15; }
 
-  /* OTA section */
-  .ota-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+  .ota-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem; }
   .ota-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
   .ota-title { font-size: 14px; font-weight: 600; color: #1a1a2e; }
   .ota-version { font-size: 12px; color: #64748b; font-family: 'Courier New', monospace; background: #e2e8f0; padding: 3px 10px; border-radius: 20px; }
   .ota-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.6; }
   .ota-warning { font-size: 12px; color: #854d0e; background: #fef9c3; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: none; }
   .ota-progress { height: 6px; background: #e2e8f0; border-radius: 10px; margin-top: 10px; display: none; overflow: hidden; }
-  .ota-progress-bar { height: 100%; width: 0%; background: #2563eb; border-radius: 10px; animation: progress 3s ease-in-out infinite; }
-  @keyframes progress { 0%{width:0%} 50%{width:80%} 100%{width:95%} }
+  .ota-progress-bar { height: 100%; width: 0%; background: #2563eb; border-radius: 10px; animation: prog 3s ease-in-out infinite; }
+  @keyframes prog { 0%{width:0%} 50%{width:80%} 100%{width:95%} }
 
   .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
   .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
@@ -95,8 +97,13 @@
   .log-entry { padding: 2px 0; border-bottom: 1px solid #2d2d4e; }
   .log-entry:last-child { border-bottom: none; }
   .log-time { color: #64748b; margin-right: 8px; }
-  .log-err  { color: #fca5a5; }
-  .log-ota  { color: #93c5fd; }
+  .log-err { color: #fca5a5; }
+  .log-ota { color: #93c5fd; }
+
+  .install-banner { background: #1a1a2e; color: white; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: none; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .install-banner p { font-size: 13px; color: #aab; }
+  .install-banner strong { color: white; display: block; font-size: 14px; margin-bottom: 4px; }
+  .install-btn { background: #22c55e; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
 
   .footer { text-align: center; font-size: 11px; color: #94a3b8; padding-bottom: 1rem; }
 </style>
@@ -116,6 +123,16 @@
 </header>
 
 <div class="main">
+
+  <!-- Install Banner (shows when PWA installable) -->
+  <div class="install-banner" id="installBanner">
+    <div>
+      <strong>Install as App</strong>
+      <p>Add this dashboard to your home screen for quick access</p>
+    </div>
+    <button class="install-btn" onclick="installPWA()">Install App</button>
+  </div>
+
   <div class="error-box"   id="errBox"></div>
   <div class="success-box" id="successBox"></div>
 
@@ -160,7 +177,6 @@
   <!-- Control Panel -->
   <div class="control-panel">
     <h2>ESP32 Control Panel</h2>
-
     <div class="control-section">
       <div class="control-label"><span class="led-indicator" id="led-indicator"></span>Built-in LED</div>
       <div class="btn-row">
@@ -168,7 +184,6 @@
         <button class="cmd-btn btn-red"   onclick="sendCommand('LED_OFF')">Turn OFF</button>
       </div>
     </div>
-
     <div class="control-section">
       <div class="control-label">Relay</div>
       <div class="btn-row">
@@ -176,40 +191,37 @@
         <button class="cmd-btn btn-gray" onclick="sendCommand('RELAY_OFF')">Relay OFF</button>
       </div>
     </div>
-
     <div class="control-section">
       <div class="control-label">Temperature Alert Threshold</div>
-      <div class="threshold-row">
+      <div class="btn-row">
         <input type="number" class="threshold-input" id="thresholdVal" placeholder="e.g. 35" min="0" max="100" />
         <button class="cmd-btn btn-orange" onclick="sendThreshold()">Set Threshold</button>
       </div>
     </div>
-
     <div class="control-section">
       <div class="control-label">Send Custom Message</div>
-      <div class="message-row">
+      <div class="btn-row">
         <input type="text" class="message-input" id="customMsg" placeholder="Type a message to send to ESP32..." />
         <button class="cmd-btn btn-purple" onclick="sendMessage()">Send</button>
       </div>
     </div>
   </div>
 
-  <!-- OTA Update Section -->
+  <!-- OTA Section -->
   <div class="ota-section">
     <div class="ota-header">
       <div class="ota-title">OTA Firmware Update</div>
       <span class="ota-version">Current: v1.0.0</span>
     </div>
     <div class="ota-desc">
-      Click the button below to send an OTA update command to your ESP32.
-      Make sure you have uploaded the new firmware to S3 and updated the version in Lambda before triggering.
+      Triggers a hybrid OTA — ESP32 switches to WiFi, downloads new firmware from S3, flashes and reboots back to Ethernet automatically.
     </div>
     <div class="btn-row">
       <button class="cmd-btn btn-dark" id="otaBtn" onclick="triggerOTA()">Send OTA Update Now</button>
       <span id="ota-status" style="font-size:12px;color:#64748b"></span>
     </div>
     <div class="ota-warning" id="otaWarning">
-      ⚠️ OTA update in progress — do NOT power off the ESP32! It will reboot automatically when done.
+      ⚠️ OTA in progress — ESP32 switched to WiFi and is flashing. Do NOT power off! It will reboot automatically.
     </div>
     <div class="ota-progress" id="otaProgress">
       <div class="ota-progress-bar"></div>
@@ -250,11 +262,35 @@
 const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
 const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
 
-let tChart, hChart;
+let tChart, hChart, deferredPrompt;
 
 const F_TS   = 'ts';
 const F_TEMP = 'temp';
 const F_HUM  = 'humidity';
+
+// PWA install prompt
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').style.display = 'none';
+  deferredPrompt = null;
+});
+
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(result => {
+      if (result.outcome === 'accepted') {
+        document.getElementById('installBanner').style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+  }
+}
 
 function fmtTs(ms) {
   try { return new Date(ms).toLocaleString('en-IN'); } catch { return ms; }
@@ -355,11 +391,11 @@ function sendMessage() {
 
 async function triggerOTA() {
   const confirmed = confirm(
-    'This will send an OTA_UPDATE command to your ESP32.\n\n' +
-    'Make sure you have:\n' +
-    '1. Uploaded new .bin to S3\n' +
-    '2. Updated version in GetFirmwareVersion Lambda\n\n' +
-    'The ESP32 will reboot after flashing. Continue?'
+    'This will send OTA_UPDATE to your ESP32.\n\n' +
+    'Make sure:\n' +
+    '1. New .bin uploaded to S3\n' +
+    '2. version.json updated in S3\n\n' +
+    'ESP32 will switch to WiFi, flash, then reboot. Continue?'
   );
   if (!confirmed) return;
 
@@ -367,8 +403,7 @@ async function triggerOTA() {
   document.getElementById('otaProgress').style.display = 'block';
   document.getElementById('ota-status').textContent    = 'Sending OTA command...';
   document.getElementById('otaBtn').disabled = true;
-
-  addLog('OTA update triggered from dashboard', 'ota');
+  addLog('OTA update triggered', 'ota');
 
   try {
     const res  = await fetch(COMMAND_API, {
@@ -377,19 +412,15 @@ async function triggerOTA() {
       body: JSON.stringify({ command: 'OTA_UPDATE' })
     });
     const data = await res.json();
-
     if (res.ok) {
-      document.getElementById('ota-status').textContent = 'Command sent! ESP32 is downloading firmware...';
-      addLog('OTA command sent successfully — ESP32 will reboot when done', 'ota');
-
-      // Hide progress after 60 seconds
+      document.getElementById('ota-status').textContent = 'Command sent! ESP32 switching to WiFi...';
+      addLog('OTA command sent — ESP32 will reboot when done', 'ota');
       setTimeout(() => {
         document.getElementById('otaWarning').style.display  = 'none';
         document.getElementById('otaProgress').style.display = 'none';
-        document.getElementById('ota-status').textContent    = 'OTA complete — ESP32 should have rebooted';
+        document.getElementById('ota-status').textContent    = 'OTA complete — ESP32 rebooted';
         document.getElementById('otaBtn').disabled = false;
-      }, 60000);
-
+      }, 90000);
     } else {
       throw new Error(data.error || 'Failed');
     }
@@ -483,6 +514,13 @@ async function fetchData() {
   } catch(e) {
     document.getElementById('footer-msg').textContent = 'Could not fetch: ' + e.message;
   }
+}
+
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(e => console.log('SW error', e));
 }
 
 fetchData();
