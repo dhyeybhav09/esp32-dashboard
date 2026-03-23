@@ -14,19 +14,15 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; min-height: 100vh; }
-
   header { background: #1a1a2e; color: white; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .header-left h1 { font-size: 20px; font-weight: 600; }
   .header-left p { font-size: 12px; color: #aab; margin-top: 2px; }
   .live-pill { background: #14532d; color: #86efac; font-size: 12px; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
   .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: blink 1.5s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-
   .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
-
-  .error-box   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; line-height: 1.6; }
+  .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; }
   .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; }
-
   .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
   .mc { background: white; border-radius: 10px; padding: 1.1rem 1.25rem; border: 1px solid #e2e8f0; }
   .mc-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
@@ -34,44 +30,36 @@
   .mc-unit { font-size: 15px; font-weight: 400; color: #94a3b8; }
   .mc-sub { font-size: 11px; color: #94a3b8; margin-top: 6px; }
   .badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 12px; margin-top: 6px; font-weight: 500; }
-  .hot   { background: #fee2e2; color: #991b1b; }
-  .warm  { background: #fef9c3; color: #854d0e; }
-  .ok    { background: #dcfce7; color: #166534; }
+  .hot { background: #fee2e2; color: #991b1b; }
+  .warm { background: #fef9c3; color: #854d0e; }
+  .ok { background: #dcfce7; color: #166534; }
   .humid { background: #dbeafe; color: #1e40af; }
-  .dry   { background: #fef9c3; color: #854d0e; }
-
+  .dry { background: #fef9c3; color: #854d0e; }
   .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
   @media(max-width:600px) { .charts { grid-template-columns: 1fr; } }
   .chart-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; }
   .chart-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
-
   .control-panel { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.25rem; margin-bottom: 1.25rem; }
   .control-panel h2 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 1rem; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
   .control-section { margin-bottom: 1.25rem; }
   .control-section:last-child { margin-bottom: 0; }
   .control-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
   .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
   .cmd-btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
   .cmd-btn:hover { opacity: 0.88; }
   .cmd-btn:active { transform: scale(0.97); }
   .cmd-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-green  { background: #16a34a; color: white; }
-  .btn-red    { background: #dc2626; color: white; }
-  .btn-blue   { background: #2563eb; color: white; }
-  .btn-gray   { background: #475569; color: white; }
+  .btn-green { background: #16a34a; color: white; }
+  .btn-red { background: #dc2626; color: white; }
+  .btn-blue { background: #2563eb; color: white; }
+  .btn-gray { background: #475569; color: white; }
   .btn-orange { background: #ea580c; color: white; }
   .btn-purple { background: #7c3aed; color: white; }
-  .btn-dark   { background: #1a1a2e; color: white; }
-
+  .btn-dark { background: #1a1a2e; color: white; }
   .threshold-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; width: 120px; color: #1a1a2e; background: #f8fafc; }
-  .threshold-input:focus { outline: none; border-color: #3b82f6; }
   .message-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; flex: 1; min-width: 200px; color: #1a1a2e; background: #f8fafc; }
-  .message-input:focus { outline: none; border-color: #3b82f6; }
-
   .led-indicator { width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; display: inline-block; margin-right: 6px; vertical-align: middle; transition: background 0.3s; }
   .led-on { background: #facc15; box-shadow: 0 0 6px #facc15; }
-
   .ota-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem; }
   .ota-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
   .ota-title { font-size: 14px; font-weight: 600; color: #1a1a2e; }
@@ -79,31 +67,40 @@
   .ota-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.6; }
   .ota-warning { font-size: 12px; color: #854d0e; background: #fef9c3; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: none; }
   .ota-progress { height: 6px; background: #e2e8f0; border-radius: 10px; margin-top: 10px; display: none; overflow: hidden; }
-  .ota-progress-bar { height: 100%; width: 0%; background: #2563eb; border-radius: 10px; animation: prog 3s ease-in-out infinite; }
+  .ota-progress-bar { height: 100%; background: #2563eb; border-radius: 10px; animation: prog 3s ease-in-out infinite; }
   @keyframes prog { 0%{width:0%} 50%{width:80%} 100%{width:95%} }
 
   /* AI Chat */
   .ai-chat { background: white; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1.25rem; overflow: hidden; }
-  .ai-chat-header { background: #1a1a2e; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; }
+  .ai-chat-header { background: #1a1a2e; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .ai-chat-header h2 { font-size: 15px; font-weight: 600; color: white; }
   .ai-badge { background: #7c3aed; color: white; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .ai-status { font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-left: 4px; }
+  .ai-status.watching { background: #14532d; color: #86efac; }
   .ai-desc { font-size: 11px; color: #aab; margin-left: auto; }
-  .chat-messages { height: 320px; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
+  .chat-messages { height: 360px; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
   .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
   .chat-msg.user { background: #1a1a2e; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
   .chat-msg.ai { background: #f1f5f9; color: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; }
   .chat-msg.ai.thinking { color: #94a3b8; font-style: italic; }
   .chat-msg.system { background: #f0fdf4; color: #166534; align-self: center; font-size: 11px; border-radius: 20px; padding: 4px 12px; }
   .chat-msg.command { background: #ede9fe; color: #5b21b6; align-self: center; font-size: 11px; border-radius: 20px; padding: 4px 12px; }
-  .chat-input-row { display: flex; gap: 8px; padding: 1rem; border-top: 1px solid #e2e8f0; }
+  .chat-msg.alert { background: #fef9c3; color: #854d0e; align-self: flex-start; border-left: 3px solid #f59e0b; border-bottom-left-radius: 4px; max-width: 95%; }
+  .chat-input-row { display: flex; gap: 8px; padding: 1rem; border-top: 1px solid #e2e8f0; align-items: center; }
   .chat-input { flex: 1; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #1a1a2e; background: #f8fafc; font-family: inherit; }
   .chat-input:focus { outline: none; border-color: #7c3aed; }
-  .chat-send { background: #7c3aed; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+  .chat-input.listening { border-color: #ef4444; background: #fef2f2; }
+  .mic-btn { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; cursor: pointer; font-size: 16px; transition: all 0.15s; flex-shrink: 0; }
+  .mic-btn:hover { background: #e2e8f0; }
+  .mic-btn.recording { background: #fee2e2; border-color: #fecaca; animation: pulse-mic 1s infinite; }
+  @keyframes pulse-mic { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .chat-send { background: #7c3aed; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
   .chat-send:hover { background: #6d28d9; }
   .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
   .suggestions { display: flex; gap: 6px; padding: 0 1rem 0.75rem; flex-wrap: wrap; }
   .suggestion { background: #f1f5f9; color: #475569; border: none; padding: 5px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; transition: background 0.15s; }
   .suggestion:hover { background: #e2e8f0; }
+  .chat-history-info { font-size: 11px; color: #94a3b8; text-align: center; padding: 4px; border-bottom: 1px solid #f1f5f9; }
 
   .table-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.1rem 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
   .table-card h3 { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
@@ -112,7 +109,6 @@
   td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #1a1a2e; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
-
   .cmd-log { background: #1a1a2e; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
   .cmd-log h3 { font-size: 13px; color: #aab; font-weight: 500; margin-bottom: 10px; }
   .log-entries { font-family: 'Courier New', monospace; font-size: 12px; color: #86efac; max-height: 120px; overflow-y: auto; }
@@ -121,8 +117,7 @@
   .log-time { color: #64748b; margin-right: 8px; }
   .log-err { color: #fca5a5; }
   .log-ota { color: #93c5fd; }
-  .log-ai  { color: #c4b5fd; }
-
+  .log-ai { color: #c4b5fd; }
   .footer { text-align: center; font-size: 11px; color: #94a3b8; padding-bottom: 1rem; }
 </style>
 </head>
@@ -141,10 +136,9 @@
 </header>
 
 <div class="main">
-  <div class="error-box"   id="errBox"></div>
+  <div class="error-box" id="errBox"></div>
   <div class="success-box" id="successBox"></div>
 
-  <!-- Metrics -->
   <div class="metrics">
     <div class="mc">
       <div class="mc-label">Temperature</div>
@@ -170,7 +164,6 @@
     </div>
   </div>
 
-  <!-- Charts -->
   <div class="charts">
     <div class="chart-card">
       <h3>Temperature history (&deg;C)</h3>
@@ -187,21 +180,24 @@
     <div class="ai-chat-header">
       <h2>AI Assistant</h2>
       <span class="ai-badge">Gemini AI</span>
-      <span class="ai-desc">Ask anything about your ESP32 data or give commands</span>
+      <span class="ai-status watching" id="aiWatchStatus">Watching</span>
+      <span class="ai-desc">Speaks, remembers, acts on complex commands</span>
     </div>
+    <div class="chat-history-info" id="historyInfo">Conversation memory: 0 messages</div>
     <div class="chat-messages" id="chatMessages">
-      <div class="chat-msg ai">Hi! I'm your ESP32 AI assistant. I have access to your live sensor data and can control your device. Try asking me something or give me a command!</div>
+      <div class="chat-msg ai">Hi! I'm your ESP32 AI assistant powered by Gemini. I remember our conversation, understand complex commands, and watch your sensor data for anomalies. Try me!</div>
     </div>
     <div class="suggestions">
       <button class="suggestion" onclick="quickAsk('What is the current temperature and humidity?')">Current readings</button>
-      <button class="suggestion" onclick="quickAsk('Is anything abnormal in the recent data?')">Check for anomalies</button>
-      <button class="suggestion" onclick="quickAsk('What was the highest temperature today?')">Highest temp today</button>
-      <button class="suggestion" onclick="quickAsk('Turn on the LED')">Turn on LED</button>
-      <button class="suggestion" onclick="quickAsk('Turn off the LED')">Turn off LED</button>
-      <button class="suggestion" onclick="quickAsk('Give me a summary of the last hour')">Last hour summary</button>
+      <button class="suggestion" onclick="quickAsk('Is anything abnormal in the recent data?')">Check anomalies</button>
+      <button class="suggestion" onclick="quickAsk('Blink the LED 3 times')">Blink LED</button>
+      <button class="suggestion" onclick="quickAsk('Turn on LED for 5 seconds then turn it off')">LED timer</button>
+      <button class="suggestion" onclick="quickAsk('Give me a full summary of the last hour')">Hour summary</button>
+      <button class="suggestion" onclick="quickAsk('What was the highest and lowest temp today?')">Min/Max today</button>
     </div>
     <div class="chat-input-row">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about your data or give a command... e.g. 'turn on LED' or 'is temp normal?'" />
+      <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything or give a command... e.g. 'blink LED 3 times'" />
       <button class="chat-send" id="chatSend" onclick="sendChat()">Send</button>
     </div>
   </div>
@@ -213,7 +209,7 @@
       <div class="control-label"><span class="led-indicator" id="led-indicator"></span>Built-in LED</div>
       <div class="btn-row">
         <button class="cmd-btn btn-green" onclick="sendCommand('LED_ON')">Turn ON</button>
-        <button class="cmd-btn btn-red"   onclick="sendCommand('LED_OFF')">Turn OFF</button>
+        <button class="cmd-btn btn-red" onclick="sendCommand('LED_OFF')">Turn OFF</button>
       </div>
     </div>
     <div class="control-section">
@@ -239,18 +235,18 @@
     </div>
   </div>
 
-  <!-- OTA Section -->
+  <!-- OTA -->
   <div class="ota-section">
     <div class="ota-header">
       <div class="ota-title">OTA Firmware Update</div>
       <span class="ota-version">Current: v1.0.0</span>
     </div>
-    <div class="ota-desc">Triggers hybrid OTA — ESP32 switches to WiFi, downloads firmware from S3, flashes and reboots back to Ethernet.</div>
+    <div class="ota-desc">Triggers hybrid OTA — ESP32 switches to WiFi, downloads firmware from S3, flashes and reboots.</div>
     <div class="btn-row">
       <button class="cmd-btn btn-dark" id="otaBtn" onclick="triggerOTA()">Send OTA Update Now</button>
       <span id="ota-status" style="font-size:12px;color:#64748b"></span>
     </div>
-    <div class="ota-warning" id="otaWarning">⚠️ OTA in progress — ESP32 switched to WiFi and is flashing. Do NOT power off!</div>
+    <div class="ota-warning" id="otaWarning">⚠️ OTA in progress — do NOT power off ESP32!</div>
     <div class="ota-progress" id="otaProgress"><div class="ota-progress-bar"></div></div>
   </div>
 
@@ -262,16 +258,12 @@
     </div>
   </div>
 
-  <!-- Data Table -->
+  <!-- Table -->
   <div class="table-card">
     <h3>Recent readings</h3>
     <table>
-      <thead>
-        <tr><th>Timestamp</th><th>Temperature (&deg;C)</th><th>Humidity (%)</th><th>Heat Index (&deg;C)</th><th>Status</th></tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">Fetching data from AWS...</td></tr>
-      </tbody>
+      <thead><tr><th>Timestamp</th><th>Temperature (&deg;C)</th><th>Humidity (%)</th><th>Heat Index (&deg;C)</th><th>Status</th></tr></thead>
+      <tbody id="tableBody"><tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">Fetching data...</td></tr></tbody>
     </table>
   </div>
 
@@ -288,12 +280,22 @@ let sensorHistory = [];
 let latestReading = {};
 let ledState = false;
 
-const F_TS   = 'ts';
-const F_TEMP = 'temp';
-const F_HUM  = 'humidity';
+// Conversation memory — keeps last 10 exchanges
+let chatHistory = [];
+const MAX_HISTORY = 10;
+
+// Proactive alert tracking
+let lastAlertTemp = null;
+let lastAlertTime = 0;
+
+// Voice recognition
+let recognition = null;
+let isListening = false;
+
+const F_TS = 'ts', F_TEMP = 'temp', F_HUM = 'humidity';
 
 function fmtTs(ms) { try { return new Date(ms).toLocaleString('en-IN'); } catch { return ms; } }
-function fmtTsShort(ms) { try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); } catch { return ms; } }
+function fmtTsShort(ms) { try { return new Date(ms).toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'}); } catch { return ms; } }
 function heatIndex(t, h) {
   const hi = -8.78469475556 + 1.61139411*t + 2.33854883889*h - 0.14611605*t*h - 0.012308094*t*t - 0.0164248277778*h*h + 0.002211732*t*t*h + 0.00072546*t*h*h - 0.000003582*t*t*h*h;
   return isNaN(hi) ? '--' : hi.toFixed(1);
@@ -333,7 +335,52 @@ function showSuccess(msg) {
   setTimeout(() => el.style.display = 'none', 3000);
 }
 
-// ── AI Chat ──────────────────────────────────────────────────
+// ── Voice Input ───────────────────────────────────────────────
+function initVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById('micBtn').style.display = 'none';
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = 'en-IN';
+
+  recognition.onresult = e => {
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    document.getElementById('chatInput').value = transcript;
+    if (e.results[0].isFinal) {
+      stopListening();
+      setTimeout(() => sendChat(), 300);
+    }
+  };
+  recognition.onend = () => stopListening();
+  recognition.onerror = () => stopListening();
+}
+
+function toggleVoice() {
+  if (!recognition) { initVoice(); }
+  if (isListening) { stopListening(); return; }
+  isListening = true;
+  document.getElementById('micBtn').classList.add('recording');
+  document.getElementById('micBtn').textContent = '🔴';
+  document.getElementById('chatInput').classList.add('listening');
+  document.getElementById('chatInput').placeholder = 'Listening...';
+  recognition.start();
+}
+
+function stopListening() {
+  isListening = false;
+  const btn = document.getElementById('micBtn');
+  btn.classList.remove('recording');
+  btn.textContent = '🎤';
+  document.getElementById('chatInput').classList.remove('listening');
+  document.getElementById('chatInput').placeholder = 'Ask anything or give a command...';
+  try { recognition.stop(); } catch(e) {}
+}
+
+// ── AI Chat ───────────────────────────────────────────────────
 function addChatMsg(text, role) {
   const box = document.getElementById('chatMessages');
   const div = document.createElement('div');
@@ -344,68 +391,84 @@ function addChatMsg(text, role) {
   return div;
 }
 
+function updateHistoryInfo() {
+  document.getElementById('historyInfo').textContent =
+    `Conversation memory: ${chatHistory.length} messages — AI remembers context`;
+}
+
 function quickAsk(text) {
   document.getElementById('chatInput').value = text;
   sendChat();
 }
 
-async function sendChat() {
-  const input = document.getElementById('chatInput');
-  const msg   = input.value.trim();
-  if (!msg) return;
-
-  input.value = '';
-  document.getElementById('chatSend').disabled = true;
-
-  addChatMsg(msg, 'user');
-  const thinking = addChatMsg('Thinking...', 'ai thinking');
-
-  // Build context from sensor data
+function buildSystemPrompt() {
   const recentData = sensorHistory.slice(0, 20).map(r => ({
     time: fmtTs(r[F_TS]),
     temp: parseFloat(r[F_TEMP]).toFixed(1),
     humidity: parseFloat(r[F_HUM]).toFixed(1)
   }));
 
-  const latest = latestReading;
-  const systemPrompt = `You are an AI assistant embedded in an ESP32 IoT dashboard. You have full access to the device's sensor data and can control it.
+  const t = parseFloat(latestReading[F_TEMP] || 0);
+  const h = parseFloat(latestReading[F_HUM] || 0);
+
+  return `You are an advanced AI assistant embedded in an ESP32 IoT dashboard. You have full access to live sensor data and can control the device.
 
 CURRENT SENSOR STATE:
-- Temperature: ${parseFloat(latest[F_TEMP]||0).toFixed(1)}°C
-- Humidity: ${parseFloat(latest[F_HUM]||0).toFixed(1)}%
-- Heat Index: ${heatIndex(parseFloat(latest[F_TEMP]||0), parseFloat(latest[F_HUM]||0))}°C
-- Last reading: ${latest[F_TS] ? fmtTs(latest[F_TS]) : 'unknown'}
+- Temperature: ${t.toFixed(1)}°C
+- Humidity: ${h.toFixed(1)}%
+- Heat Index: ${heatIndex(t, h)}°C
+- Last reading: ${latestReading[F_TS] ? fmtTs(latestReading[F_TS]) : 'unknown'}
 - LED state: ${ledState ? 'ON' : 'OFF'}
 - Device: esp32_test
 
 RECENT HISTORY (last 20 readings):
 ${JSON.stringify(recentData, null, 2)}
 
-AVAILABLE COMMANDS you can execute:
-- LED_ON / LED_OFF — control built-in LED
-- RELAY_ON / RELAY_OFF — control relay
-- SET_THRESHOLD <number> — set temperature alert threshold
-- MESSAGE <text> — send custom message to device
+AVAILABLE COMMANDS:
+- LED_ON / LED_OFF
+- RELAY_ON / RELAY_OFF
+- SET_THRESHOLD <number>
+- MESSAGE <text>
 
-INSTRUCTIONS:
-- Answer questions about the sensor data accurately using the data provided
-- If the user asks to control something, respond conversationally AND include a JSON block at the end of your response in this exact format:
-  EXECUTE_COMMAND: {"command": "LED_ON"}
-  or for threshold: EXECUTE_COMMAND: {"command": "SET_THRESHOLD", "value": 35}
-- Detect anomalies by looking at patterns in the history
-- Be concise and helpful
-- If asked about trends, analyze the history data
+COMPLEX COMMAND HANDLING:
+For complex requests like "blink LED 3 times" or "turn on LED for 5 seconds then off", output MULTIPLE commands with delays:
+EXECUTE_SEQUENCE: [{"command":"LED_ON","delay":0},{"command":"LED_OFF","delay":2000},{"command":"LED_ON","delay":4000},{"command":"LED_OFF","delay":6000}]
+
+For single commands use:
+EXECUTE_COMMAND: {"command": "LED_ON"}
+
+RULES:
+- You remember the full conversation context — refer to previous messages when relevant
+- Be concise, friendly, and proactive
+- If you notice something concerning in the data, mention it
 - Temperature above 35°C is hot, above 40°C is dangerous
 - Humidity above 70% is high, below 30% is dry
-- Always be friendly and explain what you're doing`;
+- Always explain what command you're executing and why`;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  document.getElementById('chatSend').disabled = true;
+
+  addChatMsg(msg, 'user');
+
+  // Add to history
+  chatHistory.push({ role: 'user', content: msg });
+  if (chatHistory.length > MAX_HISTORY * 2) chatHistory = chatHistory.slice(-MAX_HISTORY * 2);
+
+  const thinking = addChatMsg('Thinking...', 'ai thinking');
 
   try {
     const res = await fetch(GEMINI_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: systemPrompt,
-        messages: [{ role: 'user', content: msg }]
+        system: buildSystemPrompt(),
+        messages: chatHistory
       })
     });
 
@@ -413,50 +476,93 @@ INSTRUCTIONS:
     const parsed = data.body ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : data;
     const reply = parsed.reply || parsed.text || 'Sorry, I could not process that.';
 
-    // Check if AI wants to execute a command
+    // Add AI reply to history
+    chatHistory.push({ role: 'model', content: reply });
+    updateHistoryInfo();
+
+    // Check for sequence commands (complex)
+    const seqMatch = reply.match(/EXECUTE_SEQUENCE:\s*(\[[\s\S]*?\])/);
+    // Check for single command
     const cmdMatch = reply.match(/EXECUTE_COMMAND:\s*(\{[^}]+\})/);
-    let displayReply = reply.replace(/EXECUTE_COMMAND:\s*\{[^}]+\}/g, '').trim();
+
+    let displayReply = reply
+      .replace(/EXECUTE_SEQUENCE:\s*\[[\s\S]*?\]/g, '')
+      .replace(/EXECUTE_COMMAND:\s*\{[^}]+\}/g, '')
+      .trim();
 
     thinking.className = 'chat-msg ai';
     thinking.textContent = displayReply;
 
-    if (cmdMatch) {
+    if (seqMatch) {
+      try {
+        const sequence = JSON.parse(seqMatch[1]);
+        addChatMsg(`Executing sequence of ${sequence.length} commands...`, 'command');
+        addLog(`AI sequence: ${sequence.map(s => s.command).join(' → ')}`, 'ai');
+        sequence.forEach(step => {
+          setTimeout(() => sendCommand(step.command, step.value), step.delay || 0);
+        });
+      } catch(e) { console.log('Sequence parse error', e); }
+    } else if (cmdMatch) {
       try {
         const cmdObj = JSON.parse(cmdMatch[1]);
-        const cmdDiv = addChatMsg(`Executing: ${cmdObj.command}${cmdObj.value !== undefined ? ' → ' + cmdObj.value : ''}`, 'command');
+        addChatMsg(`Executing: ${cmdObj.command}${cmdObj.value !== undefined ? ' → ' + cmdObj.value : ''}`, 'command');
         addLog('AI executed: ' + cmdObj.command, 'ai');
         await sendCommand(cmdObj.command, cmdObj.value);
-      } catch(e) {
-        console.log('Command parse error', e);
-      }
+      } catch(e) { console.log('Command parse error', e); }
     }
 
-    addLog('AI responded to: ' + msg.substring(0, 30) + '...', 'ai');
+    addLog('AI: ' + msg.substring(0, 30) + '...', 'ai');
 
   } catch(e) {
     thinking.className = 'chat-msg ai';
-    thinking.textContent = 'Error connecting to AI: ' + e.message;
+    thinking.textContent = 'Error: ' + e.message;
     addLog('AI error: ' + e.message, 'error');
   }
 
   document.getElementById('chatSend').disabled = false;
 }
 
-// Enter key to send
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('chatInput').addEventListener('keypress', e => {
-    if (e.key === 'Enter') sendChat();
-  });
-});
+// ── Proactive Anomaly Detection ───────────────────────────────
+async function checkAnomalies(history) {
+  if (history.length < 5) return;
+  const now = Date.now();
+  if (now - lastAlertTime < 120000) return; // max one alert per 2 mins
 
-// ── Commands ─────────────────────────────────────────────────
+  const temps = history.slice(0, 10).map(r => parseFloat(r[F_TEMP]));
+  const avg = temps.reduce((a, b) => a + b, 0) / temps.length;
+  const latest = temps[0];
+  const diff = Math.abs(latest - avg);
+
+  // Spike detection — more than 5°C above average
+  if (diff > 5 && latest > avg) {
+    lastAlertTime = now;
+    const alertDiv = addChatMsg(
+      `⚠️ Proactive Alert: Temperature spike detected! Current: ${latest.toFixed(1)}°C vs average: ${avg.toFixed(1)}°C. That's ${diff.toFixed(1)}°C above normal. You may want to investigate.`,
+      'alert'
+    );
+    addLog('AI proactive alert: temp spike', 'ai');
+  }
+
+  // Very high humidity alert
+  const hums = history.slice(0, 5).map(r => parseFloat(r[F_HUM]));
+  const avgHum = hums.reduce((a, b) => a + b, 0) / hums.length;
+  if (avgHum > 75 && now - lastAlertTime > 120000) {
+    lastAlertTime = now;
+    addChatMsg(
+      `⚠️ Proactive Alert: Humidity has been consistently high (avg ${avgHum.toFixed(1)}% over last 5 readings). Consider ventilation.`,
+      'alert'
+    );
+  }
+}
+
+// ── Commands ──────────────────────────────────────────────────
 async function sendCommand(command, value) {
   const btns = document.querySelectorAll('.cmd-btn');
   btns.forEach(b => b.disabled = true);
   try {
     const body = { command };
     if (value !== undefined) body.value = value;
-    const res  = await fetch(COMMAND_API, {
+    const res = await fetch(COMMAND_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -492,30 +598,28 @@ function sendMessage() {
 }
 
 async function triggerOTA() {
-  const confirmed = confirm('Send OTA_UPDATE to ESP32?\n\nMake sure new .bin is uploaded to S3 and version.json is updated.\n\nESP32 will switch to WiFi, flash, then reboot.');
+  const confirmed = confirm('Send OTA_UPDATE to ESP32?\n\nMake sure new .bin is in S3 and version.json is updated.');
   if (!confirmed) return;
-  document.getElementById('otaWarning').style.display  = 'block';
+  document.getElementById('otaWarning').style.display = 'block';
   document.getElementById('otaProgress').style.display = 'block';
-  document.getElementById('ota-status').textContent    = 'Sending OTA command...';
+  document.getElementById('ota-status').textContent = 'Sending OTA command...';
   document.getElementById('otaBtn').disabled = true;
   addLog('OTA triggered', 'ota');
   try {
     const res = await fetch(COMMAND_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({command:'OTA_UPDATE'}) });
-    const data = await res.json();
     if (res.ok) {
       document.getElementById('ota-status').textContent = 'Command sent! ESP32 switching to WiFi...';
-      addLog('OTA command sent — ESP32 will reboot when done', 'ota');
+      addLog('OTA command sent', 'ota');
       setTimeout(() => {
-        document.getElementById('otaWarning').style.display  = 'none';
+        document.getElementById('otaWarning').style.display = 'none';
         document.getElementById('otaProgress').style.display = 'none';
-        document.getElementById('ota-status').textContent    = 'OTA complete — ESP32 rebooted';
+        document.getElementById('ota-status').textContent = 'OTA complete — ESP32 rebooted';
         document.getElementById('otaBtn').disabled = false;
       }, 90000);
-    } else { throw new Error(data.error || 'Failed'); }
+    }
   } catch(e) {
-    document.getElementById('otaWarning').style.display  = 'none';
+    document.getElementById('otaWarning').style.display = 'none';
     document.getElementById('otaProgress').style.display = 'none';
-    document.getElementById('ota-status').textContent    = '';
     document.getElementById('otaBtn').disabled = false;
     addLog('OTA error: ' + e.message, 'error');
   }
@@ -526,14 +630,14 @@ function render(data) {
   latestReading = data.latest || {};
   sensorHistory = data.history || [];
   const hist = sensorHistory.slice(0, 30);
-  const t  = parseFloat(latestReading[F_TEMP] || 0);
-  const h  = parseFloat(latestReading[F_HUM]  || 0);
+  const t = parseFloat(latestReading[F_TEMP] || 0);
+  const h = parseFloat(latestReading[F_HUM] || 0);
   const hi = heatIndex(t, h);
   const ts = latestReading[F_TS];
 
-  document.getElementById('val-temp').innerHTML  = t.toFixed(1) + '<span class="mc-unit"> &deg;C</span>';
-  document.getElementById('val-hum').innerHTML   = h.toFixed(1) + '<span class="mc-unit"> %</span>';
-  document.getElementById('val-hi').innerHTML    = hi + '<span class="mc-unit"> &deg;C</span>';
+  document.getElementById('val-temp').innerHTML = t.toFixed(1) + '<span class="mc-unit"> &deg;C</span>';
+  document.getElementById('val-hum').innerHTML  = h.toFixed(1) + '<span class="mc-unit"> %</span>';
+  document.getElementById('val-hi').innerHTML   = hi + '<span class="mc-unit"> &deg;C</span>';
   document.getElementById('val-count').textContent = hist.length;
 
   const [tLabel, tClass] = tempStatus(t);
@@ -545,7 +649,7 @@ function render(data) {
   document.getElementById('last-reading').textContent = ts ? 'last: ' + fmtTsShort(ts) : '--';
   document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
 
-  const rev    = [...hist].reverse();
+  const rev = [...hist].reverse();
   const labels = rev.map(r => fmtTsShort(r[F_TS]));
   const temps  = rev.map(r => parseFloat(r[F_TEMP]).toFixed(1));
   const hums   = rev.map(r => parseFloat(r[F_HUM]).toFixed(1));
@@ -590,6 +694,9 @@ function render(data) {
   }).join('');
 
   document.getElementById('footer-msg').textContent = 'Live data from AWS — auto-refreshing every 15 seconds';
+
+  // Run proactive anomaly check on every data update
+  checkAnomalies(sensorHistory);
 }
 
 async function fetchData() {
@@ -603,10 +710,16 @@ async function fetchData() {
   }
 }
 
+// Enter key
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('chatInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendChat();
+  });
+  initVoice();
+});
+
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .then(() => console.log('SW registered'))
-    .catch(e => console.log('SW error', e));
+  navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW error', e));
 }
 
 fetchData();
