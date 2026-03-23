@@ -186,7 +186,7 @@
   <div class="ai-chat">
     <div class="ai-chat-header">
       <h2>AI Assistant</h2>
-      <span class="ai-badge">Claude AI</span>
+      <span class="ai-badge">Gemini AI</span>
       <span class="ai-desc">Ask anything about your ESP32 data or give commands</span>
     </div>
     <div class="chat-messages" id="chatMessages">
@@ -281,8 +281,7 @@
 <script>
 const DATA_API    = "https://7pgpj3om5d.execute-api.eu-north-1.amazonaws.com/default/GetSensorData";
 const COMMAND_API = "https://lkaobj06a2.execute-api.eu-north-1.amazonaws.com/default/SendCommandToESP32";
-const CLAUDE_API  = "https://7u0hl30szb.execute-api.eu-north-1.amazonaws.com/default/ClaudeProxy";
-const CLAUDE_KEY  = "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";
+const GEMINI_API  = "https://hfyz041hh8.execute-api.eu-north-1.amazonaws.com/default/ClaudeProxy";
 
 let tChart, hChart;
 let sensorHistory = [];
@@ -401,17 +400,10 @@ INSTRUCTIONS:
 - Always be friendly and explain what you're doing`;
 
   try {
-    const res = await fetch(CLAUDE_API, {
+    const res = await fetch(GEMINI_API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
         system: systemPrompt,
         messages: [{ role: 'user', content: msg }]
       })
@@ -419,7 +411,7 @@ INSTRUCTIONS:
 
     const data = await res.json();
     const parsed = data.body ? (typeof data.body === 'string' ? JSON.parse(data.body) : data.body) : data;
-    const reply = parsed.content?.[0]?.text || 'Sorry, I could not process that.';
+    const reply = parsed.reply || parsed.text || 'Sorry, I could not process that.';
 
     // Check if AI wants to execute a command
     const cmdMatch = reply.match(/EXECUTE_COMMAND:\s*(\{[^}]+\})/);
