@@ -119,6 +119,70 @@
   .log-ota { color: #93c5fd; }
   .log-ai { color: #c4b5fd; }
   .footer { text-align: center; font-size: 11px; color: #94a3b8; padding-bottom: 1rem; }
+
+
+  /* Digital Twin */
+  .twin-panel { background: white; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1.25rem; overflow: hidden; }
+  .twin-header { background: #0f172a; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .twin-header h2 { font-size: 15px; font-weight: 600; color: white; }
+  .twin-badge { background: #7c3aed; color: white; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .twin-desc { font-size: 11px; color: #aab; }
+  .twin-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  @media(max-width:650px) { .twin-body { grid-template-columns: 1fr; } }
+  #twinCanvas3D { background: #0a0a1a; min-height: 320px; position: relative; cursor: grab; }
+  #twinCanvas3D:active { cursor: grabbing; }
+  .twin-controls { padding: 1.25rem; display: flex; flex-direction: column; gap: 12px; }
+  .twin-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .twin-stat { background: #f8fafc; border-radius: 8px; padding: 10px; text-align: center; border: 1px solid #e2e8f0; }
+  .twin-stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .twin-stat-val { font-size: 22px; font-weight: 700; color: #1a1a2e; line-height: 1; }
+  .twin-stat-unit { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+  .twin-components { display: flex; flex-direction: column; gap: 6px; }
+  .twin-comp-title { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+  .twin-comp-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #1a1a2e; background: #f8fafc; padding: 6px 10px; border-radius: 6px; }
+  .twin-comp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; transition: background 0.3s, box-shadow 0.3s; }
+  .twin-comp-val { margin-left: auto; font-size: 11px; color: #64748b; font-weight: 500; }
+  .twin-comp-btn { background: #16a34a; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+  .twin-comp-btn.red { background: #dc2626; margin-left: 2px; }
+  .twin-hint { font-size: 11px; color: #94a3b8; text-align: center; }
+
+  /* Eye Control Panel */
+  .eye-panel { background: white; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1.25rem; overflow: hidden; }
+  .eye-header { background: #0f172a; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .eye-header h2 { font-size: 15px; font-weight: 600; color: white; }
+  .eye-badge { background: #0891b2; color: white; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .eye-status { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #334155; color: #94a3b8; }
+  .eye-status.active { background: #14532d; color: #86efac; }
+  .eye-toggle-btn { margin-left: auto; background: #0891b2; color: white; border: none; padding: 7px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500; }
+  .eye-toggle-btn:hover { background: #0e7490; }
+  .eye-toggle-btn.stop { background: #dc2626; }
+  .eye-body { padding: 1.25rem; }
+  .eye-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media(max-width:650px) { .eye-layout { grid-template-columns: 1fr; } }
+  .eye-camera-wrap { position: relative; border-radius: 10px; overflow: hidden; background: #0f172a; aspect-ratio: 4/3; }
+  #eyeVideo { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+  #eyeCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+  .eye-overlay-status { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; font-size: 11px; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .eye-commands { display: flex; flex-direction: column; gap: 10px; }
+  .eye-direction-display { background: #f1f5f9; border-radius: 8px; padding: 10px; text-align: center; }
+  .eye-dir-indicator { font-size: 20px; font-weight: 700; color: #1a1a2e; letter-spacing: 2px; }
+  .eye-dir-indicator.left  { color: #16a34a; }
+  .eye-dir-indicator.right { color: #dc2626; }
+  .eye-dir-indicator.up    { color: #2563eb; }
+  .eye-dir-indicator.blink { color: #7c3aed; }
+  .eye-cmd-list { display: flex; flex-direction: column; gap: 6px; }
+  .eye-cmd-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s; }
+  .eye-cmd-item.active { background: #dcfce7; border-color: #bbf7d0; }
+  .eye-cmd-icon { font-size: 20px; flex-shrink: 0; }
+  .eye-cmd-name { font-size: 12px; font-weight: 500; color: #1a1a2e; }
+  .eye-cmd-action { font-size: 11px; color: #64748b; }
+  .eye-cmd-status { margin-left: auto; font-size: 11px; color: #16a34a; font-weight: 500; }
+  .eye-cooldown-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .eye-cooldown-label { font-size: 11px; color: #64748b; white-space: nowrap; }
+  .eye-cooldown-bar { flex: 1; height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+  .eye-cooldown-bar div { height: 100%; background: #0891b2; border-radius: 4px; width: 0%; transition: width 0.1s linear; }
+  .eye-log { font-size: 12px; color: #64748b; background: #f8fafc; border-radius: 6px; padding: 8px 10px; font-family: monospace; min-height: 36px; }
+
 </style>
 </head>
 <body>
@@ -199,6 +263,137 @@
       <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
       <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything or give a command... e.g. 'blink LED 3 times'" />
       <button class="chat-send" id="chatSend" onclick="sendChat()">Send</button>
+    </div>
+  </div>
+
+  <!-- Digital Twin Panel -->
+  <div class="twin-panel">
+    <div class="twin-header">
+      <h2>🔲 Digital Twin</h2>
+      <span class="twin-badge">Live 3D</span>
+      <span class="twin-desc">Real-time 3D model of your ESP32</span>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="twinLedState" style="font-size:11px;color:#aab">LED: OFF</span>
+        <span id="twinTempState" style="font-size:11px;color:#aab">--°C</span>
+      </div>
+    </div>
+    <div class="twin-body">
+      <div id="twinCanvas3D"></div>
+      <div class="twin-controls">
+        <div class="twin-stat-grid">
+          <div class="twin-stat">
+            <div class="twin-stat-label">Temperature</div>
+            <div class="twin-stat-val" id="twin-temp">--</div>
+            <div class="twin-stat-unit">°C</div>
+          </div>
+          <div class="twin-stat">
+            <div class="twin-stat-label">Humidity</div>
+            <div class="twin-stat-val" id="twin-hum">--</div>
+            <div class="twin-stat-unit">%</div>
+          </div>
+          <div class="twin-stat">
+            <div class="twin-stat-label">Heat Index</div>
+            <div class="twin-stat-val" id="twin-hi">--</div>
+            <div class="twin-stat-unit">°C</div>
+          </div>
+          <div class="twin-stat">
+            <div class="twin-stat-label">Status</div>
+            <div class="twin-stat-val" id="twin-status" style="font-size:14px">Normal</div>
+            <div class="twin-stat-unit"></div>
+          </div>
+        </div>
+        <div class="twin-components">
+          <div class="twin-comp-title">Components</div>
+          <div class="twin-comp-item">
+            <span class="twin-comp-dot" id="dot-led" style="background:#94a3b8"></span>
+            <span>Built-in LED</span>
+            <span class="twin-comp-val" id="comp-led">OFF</span>
+            <button class="twin-comp-btn" onclick="sendCommand('LED_ON')">ON</button>
+            <button class="twin-comp-btn red" onclick="sendCommand('LED_OFF')">OFF</button>
+          </div>
+          <div class="twin-comp-item">
+            <span class="twin-comp-dot" id="dot-relay" style="background:#94a3b8"></span>
+            <span>Relay</span>
+            <span class="twin-comp-val" id="comp-relay">OFF</span>
+            <button class="twin-comp-btn" onclick="sendCommand('RELAY_ON')">ON</button>
+            <button class="twin-comp-btn red" onclick="sendCommand('RELAY_OFF')">OFF</button>
+          </div>
+          <div class="twin-comp-item">
+            <span class="twin-comp-dot" id="dot-temp" style="background:#22c55e"></span>
+            <span>Temp Sensor</span>
+            <span class="twin-comp-val" id="comp-temp">Normal</span>
+          </div>
+          <div class="twin-comp-item">
+            <span class="twin-comp-dot" id="dot-wifi" style="background:#3b82f6"></span>
+            <span>Network</span>
+            <span class="twin-comp-val" id="comp-wifi">Online</span>
+          </div>
+        </div>
+        <div class="twin-hint">Drag to rotate &bull; Scroll to zoom &bull; Click LED to toggle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eye Control Panel -->
+  <div class="eye-panel" id="eyePanel">
+    <div class="eye-header">
+      <h2>👁️ Eye Tracking Control</h2>
+      <span class="eye-badge">MediaPipe AI</span>
+      <span class="eye-status" id="eyeStatusBadge">Off</span>
+      <button class="eye-toggle-btn" id="eyeToggleBtn" onclick="toggleEyeControl()">Start Eye Control</button>
+    </div>
+    <div class="eye-body" id="eyeBody" style="display:none">
+      <div class="eye-layout">
+        <div class="eye-camera-wrap">
+          <video id="eyeVideo" autoplay playsinline muted></video>
+          <canvas id="eyeCanvas"></canvas>
+          <div class="eye-overlay-status" id="eyeOverlayStatus">Initializing...</div>
+        </div>
+        <div class="eye-commands">
+          <div class="eye-direction-display" id="eyeDirectionDisplay">
+            <div class="eye-dir-indicator" id="dirIndicator">CENTER</div>
+          </div>
+          <div class="eye-cmd-list">
+            <div class="eye-cmd-item" id="cmd-left">
+              <span class="eye-cmd-icon">👈</span>
+              <div>
+                <div class="eye-cmd-name">Look LEFT (1s)</div>
+                <div class="eye-cmd-action">LED ON</div>
+              </div>
+              <span class="eye-cmd-status" id="status-left"></span>
+            </div>
+            <div class="eye-cmd-item" id="cmd-right">
+              <span class="eye-cmd-icon">👉</span>
+              <div>
+                <div class="eye-cmd-name">Look RIGHT (1s)</div>
+                <div class="eye-cmd-action">LED OFF</div>
+              </div>
+              <span class="eye-cmd-status" id="status-right"></span>
+            </div>
+            <div class="eye-cmd-item" id="cmd-up">
+              <span class="eye-cmd-icon">👆</span>
+              <div>
+                <div class="eye-cmd-name">Look UP (1s)</div>
+                <div class="eye-cmd-action">RELAY ON</div>
+              </div>
+              <span class="eye-cmd-status" id="status-up"></span>
+            </div>
+            <div class="eye-cmd-item" id="cmd-blink">
+              <span class="eye-cmd-icon">😑</span>
+              <div>
+                <div class="eye-cmd-name">Double Blink</div>
+                <div class="eye-cmd-action">RELAY OFF</div>
+              </div>
+              <span class="eye-cmd-status" id="status-blink"></span>
+            </div>
+          </div>
+          <div class="eye-cooldown-bar-wrap">
+            <div class="eye-cooldown-label">Cooldown</div>
+            <div class="eye-cooldown-bar"><div id="eyeCooldownBar"></div></div>
+          </div>
+          <div class="eye-log" id="eyeLog">Waiting for eye commands...</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -571,8 +766,10 @@ async function sendCommand(command, value) {
     if (res.ok) {
       showSuccess('Command sent: ' + command + (value !== undefined ? ' = ' + value : ''));
       addLog('Sent: ' + command + (value !== undefined ? ' → ' + value : ''));
-      if (command === 'LED_ON')  { ledState = true;  document.getElementById('led-indicator').className = 'led-indicator led-on'; }
-      if (command === 'LED_OFF') { ledState = false; document.getElementById('led-indicator').className = 'led-indicator'; }
+      if (command === 'LED_ON')  { ledState = true;  document.getElementById('led-indicator').className = 'led-indicator led-on'; updateTwinLED(true); }
+      if (command === 'LED_OFF') { ledState = false; document.getElementById('led-indicator').className = 'led-indicator'; updateTwinLED(false); }
+      if (command === 'RELAY_ON')  { twinRelayOn = true;  document.getElementById('dot-relay').style.background='#3b82f6'; document.getElementById('comp-relay').textContent='ON'; }
+      if (command === 'RELAY_OFF') { twinRelayOn = false; document.getElementById('dot-relay').style.background='#94a3b8'; document.getElementById('comp-relay').textContent='OFF'; }
     } else { throw new Error(data.error || 'Unknown error'); }
   } catch(e) {
     addLog('Error: ' + e.message, 'error');
@@ -695,6 +892,9 @@ function render(data) {
 
   document.getElementById('footer-msg').textContent = 'Live data from AWS — auto-refreshing every 15 seconds';
 
+  // Update digital twin
+  updateDigitalTwin(t, h, hi);
+
   // Run proactive anomaly check on every data update
   checkAnomalies(sensorHistory);
 }
@@ -708,6 +908,490 @@ async function fetchData() {
   } catch(e) {
     document.getElementById('footer-msg').textContent = 'Could not fetch: ' + e.message;
   }
+}
+
+
+
+// ── Digital Twin 3D ──────────────────────────────────────────
+let twinScene, twinCamera, twinRenderer, twinBoard, twinLedMesh, twinRelayMesh;
+let twinMouseDown = false, twinLastX = 0, twinLastY = 0;
+let twinRotX = 0.3, twinRotY = 0.5;
+let twinLedOn = false, twinRelayOn = false;
+let twinParticles = [], twinTempColor = 0x22c55e;
+
+function initDigitalTwin() {
+  const container = document.getElementById('twinCanvas3D');
+  const W = container.clientWidth || 400;
+  const H = 320;
+
+  // Scene
+  twinScene = new THREE.Scene();
+  twinScene.background = new THREE.Color(0x0a0a1a);
+  twinScene.fog = new THREE.Fog(0x0a0a1a, 8, 20);
+
+  // Camera
+  twinCamera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+  twinCamera.position.set(0, 2, 5);
+  twinCamera.lookAt(0, 0, 0);
+
+  // Renderer
+  twinRenderer = new THREE.WebGLRenderer({ antialias: true });
+  twinRenderer.setSize(W, H);
+  twinRenderer.shadowMap.enabled = true;
+  container.appendChild(twinRenderer.domElement);
+
+  // Lights
+  const ambient = new THREE.AmbientLight(0x334155, 1.5);
+  twinScene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  dirLight.position.set(5, 8, 5);
+  dirLight.castShadow = true;
+  twinScene.add(dirLight);
+  const pointLight = new THREE.PointLight(0x3b82f6, 0.8, 10);
+  pointLight.position.set(-3, 3, 3);
+  twinScene.add(pointLight);
+
+  // Grid floor
+  const gridHelper = new THREE.GridHelper(10, 20, 0x1e293b, 0x1e293b);
+  twinScene.add(gridHelper);
+
+  // ESP32 Board (main PCB)
+  const boardGeo  = new THREE.BoxGeometry(3, 0.12, 2);
+  const boardMat  = new THREE.MeshStandardMaterial({ color: 0x1a4731, roughness: 0.8, metalness: 0.2 });
+  twinBoard = new THREE.Mesh(boardGeo, boardMat);
+  twinBoard.position.y = 0.06;
+  twinBoard.castShadow = true;
+  twinBoard.receiveShadow = true;
+  twinScene.add(twinBoard);
+
+  // Board edge highlight
+  const edgeGeo = new THREE.EdgesGeometry(boardGeo);
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0x22c55e, linewidth: 1 });
+  const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+  twinBoard.add(edges);
+
+  // CPU chip
+  addBox(twinBoard, 0, 0.1, 0, 0.8, 0.08, 0.8, 0x334155, 'cpu');
+
+  // CPU label lines
+  for (let i = -0.25; i <= 0.25; i += 0.12) {
+    addBox(twinBoard, i, 0.15, 0, 0.02, 0.02, 0.6, 0x475569);
+  }
+
+  // USB connector
+  addBox(twinBoard, 0, 0.1, -1.1, 0.4, 0.15, 0.2, 0x94a3b8);
+
+  // Pin headers left
+  for (let i = -0.8; i <= 0.8; i += 0.18) {
+    addBox(twinBoard, -1.6, 0.12, i, 0.06, 0.12, 0.06, 0x1e293b);
+  }
+  // Pin headers right
+  for (let i = -0.8; i <= 0.8; i += 0.18) {
+    addBox(twinBoard, 1.6, 0.12, i, 0.06, 0.12, 0.06, 0x1e293b);
+  }
+
+  // Antenna
+  addBox(twinBoard, 1.2, 0.2, -0.7, 0.5, 0.06, 0.04, 0xf59e0b);
+
+  // LED (built-in)
+  const ledGeo = new THREE.SphereGeometry(0.08, 16, 16);
+  const ledMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, emissive: 0x000000, emissiveIntensity: 0 });
+  twinLedMesh = new THREE.Mesh(ledGeo, ledMat);
+  twinLedMesh.position.set(0.5, 0.2, 0.7);
+  twinBoard.add(twinLedMesh);
+
+  // LED point light
+  twinLedMesh.ledLight = new THREE.PointLight(0xffff00, 0, 2);
+  twinLedMesh.ledLight.position.set(0.5, 0.5, 0.7);
+  twinBoard.add(twinLedMesh.ledLight);
+
+  // Relay component
+  const relayGeo = new THREE.BoxGeometry(0.5, 0.25, 0.35);
+  const relayMat = new THREE.MeshStandardMaterial({ color: 0x1e3a5f, roughness: 0.7 });
+  twinRelayMesh = new THREE.Mesh(relayGeo, relayMat);
+  twinRelayMesh.position.set(-0.8, 0.18, 0.5);
+  twinBoard.add(twinRelayMesh);
+  const relayEdge = new THREE.LineSegments(new THREE.EdgesGeometry(relayGeo), new THREE.LineBasicMaterial({color:0x3b82f6}));
+  twinRelayMesh.add(relayEdge);
+
+  // DHT sensor
+  addBox(twinBoard, 0.9, 0.15, 0.5, 0.25, 0.12, 0.2, 0x1e40af);
+
+  // Capacitors
+  addCylinder(twinBoard, -0.3, 0.2, 0.6, 0.06, 0.18, 0x94a3b8);
+  addCylinder(twinBoard, -0.5, 0.2, 0.6, 0.06, 0.18, 0x94a3b8);
+
+  // Temp color glow on board
+  twinBoard.tempLight = new THREE.PointLight(0x22c55e, 0.3, 5);
+  twinBoard.tempLight.position.set(0, 2, 0);
+  twinScene.add(twinBoard.tempLight);
+
+  // Mouse interaction
+  const canvas = twinRenderer.domElement;
+  canvas.addEventListener('mousedown', e => { twinMouseDown=true; twinLastX=e.clientX; twinLastY=e.clientY; });
+  canvas.addEventListener('mousemove', e => {
+    if (!twinMouseDown) return;
+    twinRotY += (e.clientX - twinLastX) * 0.01;
+    twinRotX += (e.clientY - twinLastY) * 0.01;
+    twinRotX = Math.max(-0.8, Math.min(0.8, twinRotX));
+    twinLastX=e.clientX; twinLastY=e.clientY;
+  });
+  canvas.addEventListener('mouseup', () => twinMouseDown=false);
+  canvas.addEventListener('wheel', e => {
+    twinCamera.position.z += e.deltaY * 0.01;
+    twinCamera.position.z = Math.max(2, Math.min(10, twinCamera.position.z));
+  });
+
+  // Touch support
+  let lastTouch = null;
+  canvas.addEventListener('touchstart', e => { lastTouch = e.touches[0]; });
+  canvas.addEventListener('touchmove', e => {
+    if (!lastTouch) return;
+    twinRotY += (e.touches[0].clientX - lastTouch.clientX) * 0.01;
+    twinRotX += (e.touches[0].clientY - lastTouch.clientY) * 0.01;
+    twinRotX = Math.max(-0.8, Math.min(0.8, twinRotX));
+    lastTouch = e.touches[0];
+    e.preventDefault();
+  }, {passive:false});
+
+  // Click LED
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, twinCamera);
+    const hits = raycaster.intersectObject(twinLedMesh);
+    if (hits.length > 0) {
+      sendCommand(twinLedOn ? 'LED_OFF' : 'LED_ON');
+    }
+  });
+
+  animateTwin();
+}
+
+function addBox(parent, x, y, z, w, h, d, color) {
+  const geo = new THREE.BoxGeometry(w, h, d);
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.3 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  parent.add(mesh);
+  return mesh;
+}
+
+function addCylinder(parent, x, y, z, r, h, color) {
+  const geo = new THREE.CylinderGeometry(r, r, h, 12);
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.6 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  parent.add(mesh);
+  return mesh;
+}
+
+function animateTwin() {
+  requestAnimationFrame(animateTwin);
+  if (!twinScene) return;
+
+  // Smooth rotation
+  twinBoard.rotation.x = twinRotX;
+  twinBoard.rotation.y += (twinRotY - twinBoard.rotation.y) * 0.08;
+
+  // Gentle auto-rotation when not interacting
+  if (!twinMouseDown) twinRotY += 0.003;
+
+  // LED pulse when on
+  if (twinLedOn && twinLedMesh) {
+    const pulse = 0.5 + 0.5 * Math.sin(Date.now() * 0.005);
+    twinLedMesh.material.emissiveIntensity = 0.6 + pulse * 0.4;
+    twinLedMesh.ledLight.intensity = 0.8 + pulse * 0.4;
+  }
+
+  // Relay glow when on
+  if (twinRelayMesh) {
+    twinRelayMesh.material.color.setHex(twinRelayOn ? 0x1d4ed8 : 0x1e3a5f);
+    twinRelayMesh.material.emissive = new THREE.Color(twinRelayOn ? 0x3b82f6 : 0x000000);
+    twinRelayMesh.material.emissiveIntensity = twinRelayOn ? 0.4 : 0;
+  }
+
+  twinRenderer.render(twinScene, twinCamera);
+}
+
+function updateDigitalTwin(temp, hum, hi) {
+  if (!twinScene) {
+    // Load Three.js and init
+    if (!window.THREE) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      script.onload = () => { initDigitalTwin(); updateDigitalTwin(temp, hum, hi); };
+      document.head.appendChild(script);
+      return;
+    }
+    initDigitalTwin();
+  }
+
+  // Update stat displays
+  document.getElementById('twin-temp').textContent = temp.toFixed(1);
+  document.getElementById('twin-hum').textContent  = hum.toFixed(1);
+  document.getElementById('twin-hi').textContent   = hi;
+  document.getElementById('twinTempState').textContent = temp.toFixed(1) + '°C';
+
+  // Update board color based on temperature
+  let boardColor, glowColor, statusText, statusColor;
+  if (temp >= 40) {
+    boardColor = 0x7f1d1d; glowColor = 0xff0000; statusText = 'DANGER'; statusColor = '#dc2626';
+  } else if (temp >= 35) {
+    boardColor = 0x7c2d12; glowColor = 0xff6600; statusText = 'HOT'; statusColor = '#ea580c';
+  } else if (temp >= 28) {
+    boardColor = 0x713f12; glowColor = 0xffaa00; statusText = 'WARM'; statusColor = '#d97706';
+  } else {
+    boardColor = 0x1a4731; glowColor = 0x22c55e; statusText = 'NORMAL'; statusColor = '#16a34a';
+  }
+
+  if (twinBoard) {
+    twinBoard.material.color.setHex(boardColor);
+    twinBoard.tempLight.color.setHex(glowColor);
+    twinBoard.tempLight.intensity = temp > 28 ? 0.5 : 0.2;
+  }
+
+  document.getElementById('twin-status').textContent = statusText;
+  document.getElementById('twin-status').style.color = statusColor;
+  document.getElementById('dot-temp').style.background = statusColor;
+  document.getElementById('comp-temp').textContent = statusText;
+}
+
+function updateTwinLED(isOn) {
+  twinLedOn = isOn;
+  if (twinLedMesh) {
+    twinLedMesh.material.color.setHex(isOn ? 0xffff00 : 0x94a3b8);
+    twinLedMesh.material.emissive = new THREE.Color(isOn ? 0xffff00 : 0x000000);
+    twinLedMesh.material.emissiveIntensity = isOn ? 0.8 : 0;
+    twinLedMesh.ledLight.intensity = isOn ? 1.2 : 0;
+  }
+  document.getElementById('dot-led').style.background = isOn ? '#facc15' : '#94a3b8';
+  document.getElementById('dot-led').style.boxShadow = isOn ? '0 0 6px #facc15' : 'none';
+  document.getElementById('comp-led').textContent = isOn ? 'ON' : 'OFF';
+  document.getElementById('twinLedState').textContent = 'LED: ' + (isOn ? 'ON' : 'OFF');
+  document.getElementById('twinLedState').style.color = isOn ? '#facc15' : '#aab';
+}
+
+// ── Eye Tracking Control ──────────────────────────────────────
+let eyeActive = false;
+let eyeStream = null;
+let eyeAnimFrame = null;
+let faceMesh = null;
+let eyeCooldown = false;
+let eyeCooldownTimer = null;
+let lastDirection = 'CENTER';
+let directionStartTime = 0;
+let blinkTimes = [];
+const DIRECTION_HOLD_MS = 1000;
+const COOLDOWN_MS = 2500;
+
+async function toggleEyeControl() {
+  if (eyeActive) {
+    stopEyeControl();
+  } else {
+    startEyeControl();
+  }
+}
+
+async function startEyeControl() {
+  document.getElementById('eyeBody').style.display = 'block';
+  document.getElementById('eyeOverlayStatus').textContent = 'Loading MediaPipe...';
+  document.getElementById('eyeToggleBtn').textContent = 'Stop Eye Control';
+  document.getElementById('eyeToggleBtn').classList.add('stop');
+  document.getElementById('eyeStatusBadge').textContent = 'Active';
+  document.getElementById('eyeStatusBadge').classList.add('active');
+
+  try {
+    eyeStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 } });
+    const video = document.getElementById('eyeVideo');
+    video.srcObject = eyeStream;
+    await new Promise(r => video.onloadedmetadata = r);
+
+    document.getElementById('eyeOverlayStatus').textContent = 'Loading AI model...';
+    await loadFaceMesh();
+    eyeActive = true;
+    document.getElementById('eyeOverlayStatus').textContent = 'Tracking eyes...';
+    runEyeTracking();
+  } catch(e) {
+    document.getElementById('eyeOverlayStatus').textContent = 'Error: ' + e.message;
+    stopEyeControl();
+  }
+}
+
+function stopEyeControl() {
+  eyeActive = false;
+  if (eyeStream) { eyeStream.getTracks().forEach(t => t.stop()); eyeStream = null; }
+  if (eyeAnimFrame) { cancelAnimationFrame(eyeAnimFrame); eyeAnimFrame = null; }
+  document.getElementById('eyeBody').style.display = 'none';
+  document.getElementById('eyeToggleBtn').textContent = 'Start Eye Control';
+  document.getElementById('eyeToggleBtn').classList.remove('stop');
+  document.getElementById('eyeStatusBadge').textContent = 'Off';
+  document.getElementById('eyeStatusBadge').classList.remove('active');
+}
+
+async function loadFaceMesh() {
+  return new Promise((resolve, reject) => {
+    if (window.FaceMesh) { resolve(); return; }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js';
+    script.onload = () => {
+      faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/${f}` });
+      faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+      faceMesh.onResults(onFaceResults);
+      faceMesh.initialize().then(resolve).catch(reject);
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+function getIrisDirection(landmarks) {
+  // Left eye iris: 468-472, right eye iris: 473-477
+  // Left eye corners: 33 (outer), 133 (inner)
+  // Right eye corners: 362 (inner), 263 (outer)
+  // Left eye top/bottom: 159 (top), 145 (bottom)
+
+  try {
+    const leftIris   = landmarks[468];
+    const leftOuter  = landmarks[33];
+    const leftInner  = landmarks[133];
+    const leftTop    = landmarks[159];
+    const leftBottom = landmarks[145];
+
+    const rightIris  = landmarks[473];
+    const rightInner = landmarks[362];
+    const rightOuter = landmarks[263];
+
+    // Horizontal ratio: 0=far left, 1=far right
+    const leftEyeW   = leftInner.x - leftOuter.x;
+    const leftHRatio = (leftIris.x - leftOuter.x) / leftEyeW;
+
+    const rightEyeW   = rightOuter.x - rightInner.x;
+    const rightHRatio = (rightIris.x - rightInner.x) / rightEyeW;
+
+    const avgH = (leftHRatio + rightHRatio) / 2;
+
+    // Vertical ratio for up detection
+    const leftEyeH   = leftBottom.y - leftTop.y;
+    const leftVRatio = (leftIris.y - leftTop.y) / leftEyeH;
+
+    // Blink detection — eye aspect ratio
+    const leftEAR = leftEyeH / leftEyeW;
+
+    return { horizontal: avgH, vertical: leftVRatio, ear: leftEAR };
+  } catch(e) { return null; }
+}
+
+function onFaceResults(results) {
+  const canvas = document.getElementById('eyeCanvas');
+  const ctx = canvas.getContext('2d');
+  const video = document.getElementById('eyeVideo');
+
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
+    document.getElementById('eyeOverlayStatus').textContent = 'No face detected — look at camera';
+    return;
+  }
+
+  const landmarks = results.multiFaceLandmarks[0];
+  const w = canvas.width, h = canvas.height;
+
+  // Draw iris dots
+  const irisPoints = [468, 469, 470, 471, 472, 473, 474, 475, 476, 477];
+  ctx.fillStyle = '#00ff88';
+  irisPoints.forEach(i => {
+    if (landmarks[i]) {
+      ctx.beginPath();
+      ctx.arc(landmarks[i].x * w, landmarks[i].y * h, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  const dir = getIrisDirection(landmarks);
+  if (!dir) return;
+
+  // Detect blink
+  if (dir.ear < 0.15) {
+    const now = Date.now();
+    blinkTimes.push(now);
+    blinkTimes = blinkTimes.filter(t => now - t < 800);
+    if (blinkTimes.length >= 2) {
+      blinkTimes = [];
+      triggerEyeCommand('blink', 'RELAY_OFF', 'Double Blink → RELAY OFF');
+    }
+  }
+
+  // Detect direction
+  let direction = 'CENTER';
+  if (dir.horizontal < 0.35)      direction = 'LEFT';
+  else if (dir.horizontal > 0.65) direction = 'RIGHT';
+  else if (dir.vertical < 0.35)   direction = 'UP';
+
+  // Update direction display
+  const ind = document.getElementById('dirIndicator');
+  ind.textContent = direction;
+  ind.className = 'eye-dir-indicator ' + direction.toLowerCase();
+  document.getElementById('eyeOverlayStatus').textContent = `Looking ${direction}`;
+
+  // Hold detection
+  const now = Date.now();
+  if (direction !== 'CENTER') {
+    if (direction !== lastDirection) {
+      lastDirection = direction;
+      directionStartTime = now;
+    } else if (now - directionStartTime >= DIRECTION_HOLD_MS) {
+      directionStartTime = now + 99999; // prevent re-trigger
+      if (direction === 'LEFT')  triggerEyeCommand('left',  'LED_ON',   'Look LEFT → LED ON');
+      if (direction === 'RIGHT') triggerEyeCommand('right', 'LED_OFF',  'Look RIGHT → LED OFF');
+      if (direction === 'UP')    triggerEyeCommand('up',    'RELAY_ON', 'Look UP → RELAY ON');
+    }
+  } else {
+    lastDirection = 'CENTER';
+    directionStartTime = 0;
+  }
+}
+
+function triggerEyeCommand(dirKey, command, logMsg) {
+  if (eyeCooldown) return;
+  eyeCooldown = true;
+
+  // Highlight active command
+  const item = document.getElementById('cmd-' + dirKey);
+  if (item) item.classList.add('active');
+  const statusEl = document.getElementById('status-' + dirKey);
+  if (statusEl) statusEl.textContent = '✓ Sent';
+
+  document.getElementById('eyeLog').textContent = logMsg;
+  addLog('Eye: ' + logMsg, 'ai');
+  sendCommand(command);
+
+  // Cooldown bar animation
+  const bar = document.getElementById('eyeCooldownBar');
+  bar.style.width = '100%';
+  bar.style.transition = `width ${COOLDOWN_MS}ms linear`;
+  setTimeout(() => bar.style.width = '0%', 50);
+
+  eyeCooldownTimer = setTimeout(() => {
+    eyeCooldown = false;
+    if (item) item.classList.remove('active');
+    if (statusEl) statusEl.textContent = '';
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+  }, COOLDOWN_MS);
+}
+
+async function runEyeTracking() {
+  if (!eyeActive || !faceMesh) return;
+  const video = document.getElementById('eyeVideo');
+  try { await faceMesh.send({ image: video }); } catch(e) {}
+  eyeAnimFrame = requestAnimationFrame(runEyeTracking);
 }
 
 // Enter key
